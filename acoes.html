@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Ações</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<h1>📋 DASHBOARD DE AÇÕES</h1>
+
+<div class="container-topo-acoes">
+    <!-- Linha 1: Botão Voltar (Fica acima) -->
+    <button type="button" class="btn-voltar" onclick="history.back()">⬅ Voltar</button>
+
+    <!-- Linha 2: Filtros lado a lado (Fica abaixo) -->
+    <div class="linha-filtros">
+        <div class="item-filtro">
+            <span>Gerente:</span>
+            <select id="filtroGerenteAcoes" onchange="carregarAcoes()">
+                <option value="">Todos</option>
+            </select>
+        </div>
+
+        <div class="item-filtro">
+            <span>Fórum:</span>
+            <select id="filtroForumAcoes" onchange="carregarAcoes()">
+                <option value="">Todos</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+
+<!-- CARDS CORRIGIDOS (Nome da função alinhado com o JS) -->
+<div class="cards-acoes">
+
+    <div class="card" onclick="filtrarCardAcao('TOTAL')">
+        <h2>Total Ações</h2>
+        <p id="total_acoes">0</p>
+    </div>
+
+    <div class="card" onclick="filtrarCardAcao('ATRASADO')">
+        <h2>Atrasadas</h2>
+        <p id="acoes_atrasadas">0</p>
+    </div>
+
+    <div class="card" onclick="filtrarCardAcao('NO PRAZO')">
+        <h2>No Prazo</h2>
+        <p id="acoes_no_prazo">0</p>
+    </div>
+
+    <div class="card" onclick="filtrarCardAcao('ATENCAO')">
+    <h2>Atenção</h2>
+    <p id="acoes_atencao">0</p>
+    </div>
+
+</div>
+
+<div class="grafico-acoes-box">
+    <canvas id="graficoAcoes"></canvas>
+</div>
+
+<!-- TABELA -->
+<div class="tabela-container">
+<h2>Lista de Ações</h2>
+
+<table id="tabelaAcoes">
+<thead>
+<tr>
+<th>ID</th>
+<th>Demanda</th>
+<th>Status Ação</th>
+<th>Ações</th>
+<th>Prazo da Ação</th>
+<th>Responsável</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Seu script local -->
+<script src="script.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,289 @@
+body {
+    overflow-x: hidden;
+    font-family: Arial;
+    background: #edf2f7;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    margin-top: 30px;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 30px;
+    flex-wrap: nowrap;       /* ✅ NÃO quebra linha */
+    overflow-x: auto;        /* ✅ evita cortar */
+    padding: 10px;
+}
+
+
+
+.card {
+    min-width: 120px;
+    height: 110px;
+    padding: 15px;
+    border-radius: 10px;
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;   /* ✅ CENTRALIZA horizontal */
+    text-align: center;    /* ✅ garante alinhamento */
+
+    box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+}
+
+
+.card h2 {
+    font-size: 14px;
+    margin: 0;               /* ✅ REMOVE DESLOCAMENTO */
+}
+
+.card p {
+    font-size: 30px;          /* ✅ MAIOR → EQUILIBRA VISUAL */
+    margin: 5px 0 0 0;        /* ✅ espaço sutil entre titulo e número */
+    font-weight: bold;
+}
+
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card {
+    background: #34495e;  /* padrão para novos */
+}
+
+
+.planejado {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+.execucao {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+.backlog {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+.prioridade {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+
+.total {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+.atrasado {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+.atencao {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+.prazo {
+    background: #1f3a5f;   /* ✅ azul marinho elegante */
+    color: white;
+}
+
+/* ✅ BLOCO PRINCIPAL */
+
+
+.bloco-graficos {
+    display: grid;
+    grid-template-columns: 1fr 2fr;   /* ✅ mais espaço pro gráfico */
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 40px;                        /* ✅ DESENCOSTA do donut */
+    max-width: 1100px;          /* ✅ limita largura */
+    margin-left: auto;          /* ✅ CENTRALIZA NA TELA */
+    margin-right: auto;         /* ✅ CENTRALIZA NA TELA */
+}
+
+.grafico-box {
+    flex: 1;                   /* ✅ ocupa espaço proporcional */
+    max-width: 600px;          /* ✅ não estoura tela */
+    width: 100%;
+}
+
+.grafico-box canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+
+.grafico-container {
+    width: 400px;      /* ✅ controla visual */
+    max-width: 100%;
+    margin: 0;
+}
+
+
+#graficoPrioridade {
+    max-width: 200px;     /* ✅ menor */
+    margin-left: 90px;    /* ✅ empurra para posição da seta */
+}
+
+
+#graficoGerenciaForum {
+    width: 100% !important;
+    height: 320px !important;
+    margin-left: 0;   /* ✅ puxa o gráfico para esquerda (alinha com card verde) */
+}
+
+
+.tabela-container {
+    max-height: 350px;
+    overflow-y: auto;
+
+    width: 100%;   /* ✅ não usa % aqui */
+    max-width: calc(100vw - 40px);
+    margin-top: 5px;   /* ✅ isso cola no gráfico */
+    padding: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+th {
+    background: #3498db;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.filtros {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+.cards-acoes {
+    display: flex;
+    gap: 20px;
+    margin: 20px 10px;
+}
+
+.cards-acoes .card {
+    flex: 1;
+    height: 120px;
+    background: #34495e;
+    color: white;
+}
+
+
+h2 {
+    margin-top: 40px;
+}
+
+
+#tabelaAcoes {
+    width: 100%;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.menu button {
+    padding: 20px 40px;
+    font-size: 30px;
+    border-radius: 10px;
+    border: none;
+    background: #2c5282;
+    color: white;
+    cursor: pointer;
+}
+
+.menu button:hover {
+    background: #1f3a5f;
+}
+
+/* =============================
+   ⚙️ ALINHAMENTO DO TOPO EM CAMADAS
+   ============================= */
+.container-topo-acoes {
+    display: flex;
+    flex-direction: column; /* Força o botão a ficar acima e os filtros abaixo */
+    align-items: center;    /* Centraliza tudo horizontalmente */
+    gap: 15px;              /* Espaço vertical entre o botão e a linha de filtros */
+    margin-bottom: 30px;    /* Afasta todo o bloco dos cards de baixo */
+}
+
+.linha-filtros {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;              /* Espaço horizontal entre o select do Gerente e do Fórum */
+}
+
+.item-filtro {
+    display: flex;
+    align-items: center;
+    gap: 8px;               /* Espaço entre a palavra "Gerente:" e o select */
+    font-weight: bold;
+}
+
+/* Botão voltar estilizado e discreto */
+.btn-voltar {
+    padding: 6px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-voltar:hover {
+    background: #f1f5f9;
+    transform: scale(1.02);
+}
+
+.grafico-acoes-box {
+    width: 400px;
+    margin: 20px auto;
+    height: 300px;
+}
+
+#graficoAcoes {
+    width: 100% !important;
+    height: 100% !important;
+}
