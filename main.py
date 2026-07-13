@@ -3,6 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 import os
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 app = FastAPI()
 
@@ -15,7 +20,11 @@ app.add_middleware(
 )
 
 
-MONGO_URL = os.getenv("MONGO_URL")
+# MONGO_URL = os.getenv("mongodb+srv://brunomandar_db_user:pCcXPL2mNgJE5ouG@cluster0.tpbalha.mongodb.net/")
+
+MONGO_URL = "mongodb+srv://brunomandar_db_user:pCcXPL2mNgJE5ouG@cluster0.tpbalha.mongodb.net/"
+
+print(MONGO_URL)
 
 client = MongoClient(MONGO_URL)
 
@@ -31,10 +40,13 @@ def home():
 }
 
 @app.get("/dashboard")
-def dashboard(gerente: str = None, forum: str = None, status: str = None):
+def dashboard(
+    gerente: str = None,
+    forum: str = None,
+    status: str = None
+):
 
-    
-query = {}
+    query = {}
 
     if gerente:
         query["Gerente"] = gerente
@@ -90,9 +102,7 @@ query = {}
         [x for x in dados if x.get("Prioridade") == "Baixa"]
     )
 
-
-    
-return {
+    return {
         "total": total,
         "atrasado": atrasado,
         "atencao": atencao,
@@ -107,10 +117,13 @@ return {
 
 
 @app.get("/projetos")
-def projetos(gerente: str = None, forum: str = None, status: str = None):
+def projetos(
+    gerente: str = None,
+    forum: str = None,
+    status: str = None
+):
 
-    
-query = {}
+    query = {}
 
     if gerente:
         query["Gerente"] = gerente
@@ -131,10 +144,12 @@ query = {}
     return dados
 
 @app.get("/acoes")
-def acoes(gerente: str = "", forum: str = ""):
-    
-    
-query = {}
+def acoes(
+    gerente: str = "",
+    forum: str = ""
+):
+
+    query = {}
 
     if gerente:
         query["Gerente"] = gerente
@@ -153,12 +168,12 @@ query = {}
 
     atrasadas = len(
         [x for x in dados
-         if x.get("Status Ação") == "ATRASADO"]
+        if x.get("Status Ação") == "ATRASADO"]
     )
 
     no_prazo = len(
         [x for x in dados
-         if x.get("Status Ação") == "NO PRAZO"]
+        if x.get("Status Ação") == "NO PRAZO"]
     )
 
     return {
