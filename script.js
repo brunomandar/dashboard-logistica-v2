@@ -285,7 +285,7 @@ function carregarAcoes() {
     const gerente = document.getElementById("filtroGerenteAcoes")?.value || "";
     const forum = document.getElementById("filtroForumAcoes")?.value || "";
 
-    fetch(`http://127.0.0.1:8000/acoes?gerente=${gerente}&forum=${forum}`)
+    fetch(`https://dashboard-logistica-v2.onrender.com/acoes?gerente=${gerente}&forum=${forum}`)
     .then(res => res.json())
     .then(data => {
 
