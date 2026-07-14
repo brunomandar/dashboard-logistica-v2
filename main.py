@@ -18,9 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-# MONGO_URL = os.getenv("mongodb+srv://brunomandar_db_user:pCcXPL2mNgJE5ouG@cluster0.tpbalha.mongodb.net/")
-
 MONGO_URL = os.getenv("MONGO_URL")
 
 
