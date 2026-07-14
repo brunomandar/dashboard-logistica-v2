@@ -2,9 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pymongo import MongoClient
 import os
-
 from dotenv import load_dotenv
-import os
+
 
 load_dotenv()
 
@@ -22,9 +21,12 @@ app.add_middleware(
 
 # MONGO_URL = os.getenv("mongodb+srv://brunomandar_db_user:pCcXPL2mNgJE5ouG@cluster0.tpbalha.mongodb.net/")
 
-MONGO_URL = "mongodb+srv://brunomandar_db_user:pCcXPL2mNgJE5ouG@cluster0.tpbalha.mongodb.net/"
+MONGO_URL = os.getenv("MONGO_URL")
 
-print(MONGO_URL)
+
+if not MONGO_URL:
+    raise ValueError("Variável MONGO_URL não encontrada.")
+
 
 client = MongoClient(MONGO_URL)
 
