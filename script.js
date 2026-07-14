@@ -18,7 +18,7 @@ function filtrarCardProjeto(tipo) {
 // =============================
 function carregarFiltrosProjetos() {
 
-    fetch("http://127.0.0.1:8000/projetos")
+    fetch("https://dashboard-logistica-v2.onrender.com/projetos")
     .then(response => response.json())
     .then(lista => {
 
@@ -55,7 +55,7 @@ function carregarDashboard() {
     const status = document.getElementById("filtroStatus")?.value || "";
 
     // ✅ MÉTRICAS
-    fetch(`http://127.0.0.1:8000/dashboard?gerente=${gerente}&forum=${forum}&status=${status}`)
+    fetch(`https://dashboard-logistica-v2.onrender.com/dashboard?gerente=${gerente}&forum=${forum}&status=${status}`)
     .then(res => res.json())
     .then(data => {
 
@@ -120,7 +120,7 @@ if (ctx) {
 
 
         // ✅ TABELA + GRÁFICO BARRAS (CONECTADOS CORRETAMENTE)
-        fetch(`http://127.0.0.1:8000/projetos?gerente=${gerente}&forum=${forum}&status=${status}`)
+        fetch(`https://dashboard-logistica-v2.onrender.com/projetos?gerente=${gerente}&forum=${forum}&status=${status}`)
         .then(res => res.json())
         .then(lista => {
 
@@ -253,7 +253,7 @@ if (ctx) {
 // =============================
 function carregarFiltrosAcoes() {
 
-    fetch("http://127.0.0.1:8000/acoes")	
+    fetch("https://dashboard-logistica-v2.onrender.com/acoes")	
     .then(res => res.json())
     .then(data => {
 
