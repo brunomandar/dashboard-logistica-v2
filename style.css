@@ -1519,3 +1519,159 @@ td{
     flex-direction: column;
     align-items: center;
 }
+
+.layout-dashboard{
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.sidebar{
+    width: 220px;
+    min-width: 220px;
+    height: 100vh;
+}
+
+.conteudo-dashboard{
+    flex: 1;
+    min-width: 0;
+
+    padding: 18px 30px;
+
+    background-image: url('./imagens/fundo_claro.jpg');
+    background-size: cover;
+    background-position: center;
+
+    overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.miolo-dashboard{
+    width: 1050px;
+    min-width: 1050px;
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-topo-acoes{
+    width: 900px;
+    margin: 0 auto 18px auto;
+    align-items: flex-start;
+}
+
+.linha-filtros{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 650px;
+    margin-left: 280px;
+
+    gap: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.area-resumo-demandas{
+    display: grid;
+    grid-template-columns: 160px 450px 230px;
+    column-gap: 24px;
+    align-items: start;
+
+    width: 900px;
+    max-width: 900px;
+
+    margin: 15px auto 0 auto;
+
+    padding: 0;
+    height: 220px;
+}
+
+.tabela-container{
+    width: 890px;
+    max-width: 890px;
+
+    margin: 0 auto;
+
+    background: rgba(180,180,180,.75);
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+
+    max-height: 180px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+.miolo-dashboard-acoes{
+    width: 1050px;
+    min-width: 1050px;
+    max-width: 1050px;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container-topo-acoes-painel{
+    width: 850px;
+    margin: 0 auto 18px auto;
+    align-items: flex-start;
+}
+
+.linha-filtros-acoes{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 650px;
+    margin-left: 195px;
+
+    gap: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+}
+
+.area-resumo-acoes{
+    display: grid;
+    grid-template-columns: 160px 650px;
+    column-gap: 35px;
+    align-items: start;
+
+    width: 850px;
+    max-width: 850px;
+
+    margin: 15px auto 0 auto;
+    padding: 0;
+
+    height: 240px;
+}
+
+.tabela-acoes-layout{
+    width: 850px;
+    max-width: 850px;
+
+    margin: 5px auto 0 auto;
+
+    background: rgba(180,180,180,.75);
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+
+    max-height: 235px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
