@@ -1157,23 +1157,29 @@ td{
     white-space: nowrap;
 }
 
-/* Filtros */
+/* FILTROS DEMANDAS ALINHADOS COM OS GRÁFICOS */
+
 .container-topo-acoes{
-    margin-left: 200px;
-    width: calc(100% - 360px);
-    margin-bottom: 18px;
+    width: 900px;
+    margin: 0 auto 18px auto;
     align-items: flex-start;
 }
 
 .linha-filtros{
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    gap: 58px;
+
+    /* começa onde começa o gráfico de barras */
+    margin-left: 278px;
+
+    /* ocupa a largura dos gráficos: barras + espaço + rosca */
+    width: 675px;
+
+    gap: 0;
     background: transparent;
     box-shadow: none;
     padding: 0;
-    margin: 0;
 }
 
 .item-filtro{
@@ -1196,7 +1202,7 @@ td{
 .area-resumo-demandas{
     display: grid;
     grid-template-columns: 160px 450px 230px;
-    column-gap: 35px;
+    column-gap: 24px;
     align-items: start;
 
     width: 900px;
