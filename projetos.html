@@ -7,17 +7,53 @@
 <link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script src="script.js" defer></script>
+
 </head>
 
 <body>
 
-<h1>📊 DASHBOARD EXECUTIVO - DEMANDAS</h1>
+<div class="layout-dashboard">
+
+    <!-- BARRA LATERAL -->
+
+    <div class="sidebar">
+
+        <div>
+
+            <div class="logo-claro">
+                <img src="imagens/claro_logo.png"  alt="Logo-claro">
+            </div>
+
+            <div class="texto-sidebar">
+                SUPORTE OPERACIONAL E<br>
+                MELHORIA CONTÍNUA
+            </div>
+
+            <button class="btn-lateral" onclick="history.back()">
+                VOLTAR
+            </button>
+
+        </div>
+
+        <div class="icone-logistica">
+            <img src="imagens/caminhao.png"  alt="icone-logistica">
+        </div>
+
+    </div>
+
+    <!-- CONTEÚDO -->
+
+    <div class="conteudo-dashboard">
+
+    <div>
+        <div class="titulo-dashboard">
+         DASHBOARD - DEMANDAS
+        </div>
+    </div>
 
 <div class="container-topo-acoes">
-    <!-- Linha 1: Botão bonitão de voltar acima -->
-    <button type="button" class="btn-voltar" onclick="history.back()">⬅ Voltar</button>
-
-    <!-- Linha 2: Filtros lado a lado abaixo -->
+    
     <div class="linha-filtros">
         <div class="item-filtro">
             <span>Gerente:</span>
@@ -42,62 +78,52 @@
     </div>
 </div>
 
-<!-- CARDS -->
-<div class="cards">
+<!-- ÁREA PRINCIPAL: CARDS + GRÁFICOS -->
+<div class="area-resumo-demandas">
 
-<div class="card total" onclick="filtrarCardProjeto('TOTAL')">
-<h2>Total</h2>
-<p id="total">0</p>
-</div>
+    <!-- CARDS EMPILHADOS -->
+    <div class="cards-demandas-vertical">
 
-<div class="card atrasado" onclick="filtrarCardProjeto('ATRASADO')">
-<h2>Atrasados</h2>
-<p id="atrasado">0</p>
-</div>
+        <div class="card card-demanda total" onclick="filtrarCardProjeto('TOTAL')">
+            <h2>Total</h2>
+            <p id="total">0</p>
+        </div>
 
-<div class="card atencao" onclick="filtrarCardProjeto('ATENÇÃO')">
-<h2>Atenção</h2>
-<p id="atencao">0</p>
-</div>
+        <div class="card card-demanda prazo" onclick="filtrarCardProjeto('NO PRAZO')">
+            <h2>No Prazo</h2>
+            <p id="prazo">0</p>
+        </div>
 
-<div class="card prazo" onclick="filtrarCardProjeto('NO PRAZO')">
-<h2>No Prazo</h2>
-<p id="prazo">0</p>
-</div>
+        <div class="card card-demanda atencao" onclick="filtrarCardProjeto('ATENÇÃO')">
+            <h2>Atenção</h2>
+            <p id="atencao">0</p>
+        </div>
 
-<div class="card planejado" onclick="filtrarCardProjeto('PLANEJADO')">
-<h2>Planejado</h2>
-<p id="planejado">0</p>
-</div>
+        <div class="card card-demanda atrasado" onclick="filtrarCardProjeto('ATRASADO')">
+            <h2>Atrasado</h2>
+            <p id="atrasado">0</p>
+        </div>
 
-<div class="card execucao" onclick="filtrarCardProjeto('EXECUÇÃO')">
-<h2>Em Execução</h2>
-<p id="em_execucao">0</p>
-</div>
+        <div class="card card-demanda sem-prazo" onclick="filtrarCardProjeto('SEM_PRAZO_DEFINIDO')">
+            <h2>Sem Prazo</h2>
+            <p id="sem_prazo_definido">0</p>
+        </div>
 
-<div class="card backlog" onclick="filtrarCardProjeto('BACKLOG')">
-<h2>Backlog</h2>
-<p id="backlog">0</p>
-</div>
-
-<div class="card prioridade alta" onclick="filtrarCardProjeto('ALTA')">
-    <h2>Prioridade Alta</h2>
-    <p id="prioridade_alta_card">0</p>
-</div>
-
-</div>
-
-<!-- GRÁFICOS -->
-<div class="bloco-graficos">
-    <!-- Caixa do Gráfico Donut -->
-    <div class="grafico-box">
-        <canvas id="graficoPrioridade"></canvas>
     </div>
 
-    <!-- Caixa do Gráfico de Barras (Onde ocorre o erro da imagem) -->
-    <div class="grafico-box">
-        <canvas id="graficoGerenciaForum"></canvas>
+    <!-- GRÁFICOS -->
+    <div class="graficos-demandas">
+
+        <div class="grafico-box">
+            <canvas id="graficoGerenciaForum"></canvas>
+        </div>
+
+        <div class="grafico-box grafico-donut-menor">
+            <canvas id="graficoPrioridade"></canvas>
+        </div>
+
     </div>
+
 </div>
 
 
@@ -119,6 +145,10 @@
 </thead>
 <tbody></tbody>
 </table>
+
+</div>
+
+</div>
 
 </div>
 
