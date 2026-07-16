@@ -1196,7 +1196,7 @@ td{
 .area-resumo-demandas{
     display: grid;
     grid-template-columns: 160px 450px 230px;
-    column-gap: 24px;
+    column-gap: 35px;
     align-items: start;
 
     width: 900px;
@@ -1213,10 +1213,10 @@ td{
 .cards-demandas-vertical{
     display: flex;
     flex-direction: column;
-    gap: 11px;
+    gap: 15px;
     width: 145px;
 
-    transform: translateY(-45px);
+    transform: translateY(-58px);
 }
 
 .card-demanda{
