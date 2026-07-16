@@ -771,7 +771,7 @@ function ajustarEscalaDashboard() {
     if (!conteudo || !canvas) return;
 
     const baseWidth = Number(canvas.dataset.baseWidth || 1050);
-    const baseHeight = Number(canvas.dataset.baseHeight || 680);
+    const baseHeight = Number(canvas.dataset.baseHeight || 600);
 
     const larguraDisponivel = conteudo.clientWidth - 20;
     const alturaDisponivel = conteudo.clientHeight - 20;
