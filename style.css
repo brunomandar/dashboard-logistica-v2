@@ -647,18 +647,26 @@ th {
 
 /* Container dos filtros */
 .container-topo-acoes{
-    margin-bottom:25px;
+    width: 100%;
+    margin: 0 0 18px 0;
+    align-items: center;
 }
 
 /* Linha dos filtros no padrão do PPT */
 .linha-filtros{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap:10px;
-    background:transparent;
-    box-shadow:none;
-    margin-bottom:10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 970px;
+
+    gap: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+
+    transform: translateX(-90px);
 }
 
 /* Labels dos filtros */
@@ -1133,6 +1141,10 @@ td{
     background-size: cover;
     background-position: center;
     overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* Título */
@@ -1157,7 +1169,7 @@ td{
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 18px;
+    gap: 58px;
     background: transparent;
     box-shadow: none;
     padding: 0;
@@ -1191,7 +1203,7 @@ td{
     max-width: 900px;
 
     /* aqui estava o problema: removemos o margin negativo */
-    margin: 15px 0 0 05px;
+    margin: 15px auto 0 auto;
 
     padding: 0;
     height: 220px;
@@ -1295,7 +1307,7 @@ td{
     width: 890px;
     max-width: 900px;
 
-    margin: 00px 0 0 00px;
+    margin: 0 auto;
 
     background: rgba(180,180,180,.75);
     border-radius: 0;
@@ -1340,17 +1352,19 @@ td{
 ===================================================== */
 
 .container-topo-acoes-painel{
-    margin-left: 200px;
-    width: calc(100% - 360px);
-    margin-bottom: 18px;
-    align-items: flex-start;
+    width: 650px;
+    margin: 0 0 18px 195px;
+    align-items: center;
 }
 
 .linha-filtros-acoes{
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    gap: 18px;
+    gap: 15px;
+
+    width: 100%;
+
     background: transparent;
     box-shadow: none;
     padding: 0;
@@ -1367,7 +1381,7 @@ td{
     width: 850px;
     max-width: 850px;
 
-    margin: 15px 0 0 5px;
+    margin: 15px auto 0 auto;
     padding: 0;
 
     height: 240px;
@@ -1377,10 +1391,10 @@ td{
 .cards-acoes-vertical{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     width: 150px;
 
-    transform: translateY(-35px);
+    transform: translateY(-58px);
 }
 
 .card-acao{
@@ -1440,14 +1454,14 @@ td{
     width: 850px;
     max-width: 850px;
 
-    margin: 5px 0 0 0;
+    margin: 5px auto 0 auto;
 
     background: rgba(180,180,180,.75);
     border-radius: 0;
     padding: 0;
     box-shadow: none;
 
-    max-height: 150px;
+    max-height: 235px;
     overflow-y: auto;
     overflow-x: auto;
 }
@@ -1478,4 +1492,24 @@ td{
     border-bottom: 1px solid #aaa;
     font-size: 10px;
     line-height: 11px;
+}
+
+.miolo-dashboard{
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.miolo-dashboard-acoes{
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
