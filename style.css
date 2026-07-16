@@ -1675,3 +1675,36 @@ td{
     overflow-y: auto;
     overflow-x: auto;
 }
+
+/* =====================================================
+   DASHBOARD AUTOAJUSTÁVEL
+===================================================== */
+
+.conteudo-dashboard{
+    flex: 1;
+    min-width: 0;
+
+    padding: 18px 30px;
+
+    background-image: url('./imagens/fundo_claro.jpg');
+    background-size: cover;
+    background-position: center;
+
+    overflow: hidden;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.dashboard-canvas{
+    width: 1050px;
+    min-width: 1050px;
+    height: 680px;
+    min-height: 680px;
+
+    transform: translateX(var(--dashboard-shift-x, 0px)) scale(var(--dashboard-scale, 1));
+    transform-origin: top center;
+
+    margin: 0 auto;
+}

@@ -759,4 +759,37 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("filtroStatusAcoes").addEventListener("change", carregarAcoes);
     }
 }
+
+ajustarEscalaDashboard();
+
 });
+
+function ajustarEscalaDashboard() {
+    const conteudo = document.querySelector(".conteudo-dashboard");
+    const canvas = document.querySelector(".dashboard-canvas");
+
+    if (!conteudo || !canvas) return;
+
+    const baseWidth = Number(canvas.dataset.baseWidth || 1050);
+    const baseHeight = Number(canvas.dataset.baseHeight || 680);
+
+    const larguraDisponivel = conteudo.clientWidth - 20;
+    const alturaDisponivel = conteudo.clientHeight - 20;
+
+    const escalaLargura = larguraDisponivel / baseWidth;
+    const escalaAltura = alturaDisponivel / baseHeight;
+
+    const escalaMaxima = 1.15;
+
+    const escala = Math.min(escalaLargura, escalaAltura, escalaMaxima);
+
+    canvas.style.setProperty("--dashboard-scale", escala);
+
+    // Ajuste fino para centralizar melhor dentro da área cinza
+    canvas.style.setProperty("--dashboard-shift-x", "-35px");
+}
+
+window.addEventListener("resize", ajustarEscalaDashboard);
+window.addEventListener("load", ajustarEscalaDashboard);
+
+setTimeout(ajustarEscalaDashboard, 300);
