@@ -1,25 +1,71 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
-    <title>Menu Dashboard</title>
+    <title>Dashboard Logística</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>📊 PORTFÓLIO LOGÍSTICA - DEMANDAS</h1>
+    <div class="layout-home">
 
-<div class="menu">
-    <button onclick="irPara('projetos.html')">📊 Demandas</button>
-    <button onclick="irPara('acoes.html')">📋 Ações</button>
-</div>
+        <!-- MENU ESQUERDO -->
 
-<script>
-function irPara(pagina) {
-    window.location.href = pagina;
-}
-</script>
+        <div class="sidebar">
+
+            <div class="sidebar-topo">
+
+                <div class="logo-claro">
+                    <img src="imagens/claro_logo.png"  alt="Logo-claro">
+                </div>
+
+                <div class="texto-sidebar">
+                    SUPORTE OPERACIONAL E<br>
+                    MELHORIA CONTÍNUA
+                </div>
+
+            </div>
+
+            <div class="menu-lateral">
+
+                <button onclick="irPara('projetos.html')">
+                    DEMANDAS
+                </button>
+
+                <button onclick="irPara('acoes.html')">
+                    AÇÕES
+                </button>
+
+                <button disabled>
+                    DGP / FCST
+                </button>
+
+            </div>
+
+            <div class="icone-logistica">
+                <img src="imagens/caminhao.png"  alt="icone-logistica">
+            </div>
+
+        </div>
+
+        <!-- ÁREA PRINCIPAL -->
+
+        <div class="conteudo-home">
+
+            <h1>BEM VINDO!</h1>
+
+        </div>
+
+    </div>
+
+    <script>
+        function irPara(pagina) {
+            window.location.href = pagina;
+        }
+    </script>
 
 </body>
+
 </html>
