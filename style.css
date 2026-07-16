@@ -1700,8 +1700,8 @@ td{
 .dashboard-canvas{
     width: 1050px;
     min-width: 1050px;
-    height: 680px;
-    min-height: 680px;
+    height: 600px;
+    min-height: 600px;
 
     transform: translateX(var(--dashboard-shift-x, 0px)) scale(var(--dashboard-scale, 1));
     transform-origin: top center;
