@@ -18,6 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 MONGO_URL = os.getenv("MONGO_URL")
 
 
@@ -30,6 +31,12 @@ client = MongoClient(MONGO_URL)
 db = client["dashboard_logistica"]
 collection = db["projetos"]
 
+@app.get("/health")
+def health():
+    return {
+        "status": "ok",
+        "service": "dashboard-logistica-api"
+    }
 
 @app.get("/")
 def home():
