@@ -2,6 +2,16 @@ let filtroCardProjeto = "";
 let filtroCard = "";
 let projetosCache = [];
 
+function extrairNumeroLog(id) {
+    const texto = (id || "").toString().toUpperCase().trim();
+
+    const match = texto.match(/LOG-?\s*(\d+)/);
+
+    if (!match) return 9999;
+
+    return parseInt(match[1], 10);
+}
+
 /* Plugin próprio para mostrar valores nos gráficos */
 const pluginValoresGraficos = {
     id: "valoresGraficos",
@@ -411,6 +421,10 @@ const ehSemPrazoDefinido = (item) => {
     // =========================
     // TABELA
     // =========================
+
+    listaFiltrada = [...listaFiltrada].sort((a, b) => {
+    return extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID);
+});
 
     const tabela = document.querySelector("#tabelaProjetos tbody");
 
