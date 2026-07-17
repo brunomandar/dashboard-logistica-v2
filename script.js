@@ -787,19 +787,34 @@ function ajustarEscalaDashboard() {
     const baseWidth = Number(canvas.dataset.baseWidth || 1050);
     const baseHeight = Number(canvas.dataset.baseHeight || 600);
 
-    const larguraDisponivel = conteudo.clientWidth - 20;
-    const alturaDisponivel = conteudo.clientHeight - 20;
+    const larguraDisponivel = conteudo.clientWidth - 30;
+    const alturaDisponivel = conteudo.clientHeight - 30;
 
     const escalaLargura = larguraDisponivel / baseWidth;
     const escalaAltura = alturaDisponivel / baseHeight;
 
-    const escalaMaxima = 1.15;
+    /*
+      Regra:
+      - Em telas grandes, permite crescer um pouco.
+      - Em telas menores, reduz proporcionalmente.
+      - Nunca deixa maior que 1.25 para não estourar.
+    */
+    const escalaMaxima = 1.25;
+    const escalaMinima = 0.62;
 
-    const escala = Math.min(escalaLargura, escalaAltura, escalaMaxima);
+    let escala = Math.min(escalaLargura, escalaAltura, escalaMaxima);
+
+    if (escala < escalaMinima) {
+        escala = escalaMinima;
+    }
 
     canvas.style.setProperty("--dashboard-scale", escala);
 
-    // Ajuste fino para centralizar melhor dentro da área cinza
+    /*
+      Ajuste fino horizontal.
+      Se em 100% estiver muito para a direita, use -35px ou -45px.
+      Se ficar muito para a esquerda, reduza para -20px.
+    */
     canvas.style.setProperty("--dashboard-shift-x", "-35px");
 }
 

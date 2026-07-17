@@ -1739,3 +1739,13 @@ td{
     background: #ffffff;
     transform: scale(1.03);
 }
+
+@media (max-width: 900px){
+    .layout-dashboard{
+        min-width: 900px;
+    }
+
+    body{
+        overflow-x: auto;
+    }
+}
