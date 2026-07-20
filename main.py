@@ -1,9 +1,8 @@
-from datetime import datetime
-from dotenv import load_dotenv
-from fastapi import FastAPI, Header, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pymongo import MongoClient
 import os
-from pymongo import MongoClient, UpdateOne
+from dotenv import load_dotenv
 
 
 load_dotenv()
@@ -188,53 +187,4 @@ def acoes(
         "acoes_atrasadas": atrasadas,
         "acoes_no_prazo": no_prazo,
         "dados": dados
-    }
-
-@app.post("/sync/base-limpa")
-def sync_base_limpa(payload: dict, x_api_key: str = Header(None)):
-    api_key_correta = os.getenv("SYNC_API_KEY")
-
-    if not api_key_correta:
-        raise HTTPException(status_code=500, detail="SYNC_API_KEY não configurada no servidor.")
-
-    if x_api_key != api_key_correta:
-        raise HTTPException(status_code=401, detail="Não autorizado.")
-
-    linhas = payload.get("linhas", [])
-
-    if not isinstance(linhas, list):
-        raise HTTPException(status_code=400, detail="O campo 'linhas' precisa ser uma lista.")
-
-    operacoes = []
-
-    for linha in linhas:
-        id_log = linha.get("ID")
-
-        if not id_log:
-            continue
-
-        linha["ultima_atualizacao_mongo"] = datetime.utcnow().isoformat()
-
-        operacoes.append(
-            UpdateOne(
-                {"ID": id_log},
-                {"$set": linha},
-                upsert=True
-            )
-        )
-
-    if operacoes:
-        resultado = collection.bulk_write(operacoes)
-    else:
-        return {
-            "status": "sem_dados",
-            "mensagem": "Nenhuma linha válida recebida."
-        }
-
-    return {
-        "status": "ok",
-        "recebidos": len(linhas),
-        "processados": len(operacoes),
-        "upserts": resultado.upserted_count,
-        "modificados": resultado.modified_count
     }
