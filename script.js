@@ -200,9 +200,9 @@ const ehSemPrazoDefinido = (item) => {
                         prioridadeBaixa
                     ],
                     backgroundColor: [
-                        "#c00000",
-                        "#ff4d4d",
-                        "#ff9999"
+                        "#990000",
+                        "#ff3333",
+                        "#ffb3b3"
                     ],
                     borderColor: "#ffffff",
                     borderWidth: 2
@@ -279,9 +279,9 @@ const ehSemPrazoDefinido = (item) => {
         const foruns = [...new Set(projetos.map(p => p.Forum).filter(Boolean))];
 
         const cores = [
-            "#c00000",
+            "#000000",
             "#e53935",
-            "#ff6666",
+            "#808080",
             "#ff9999",
             "#990000",
             "#d32f2f"
@@ -614,16 +614,16 @@ function carregarAcoes() {
                                 semAcao
                             ],
                             backgroundColor: [
-                                "#c00000",
-                                "#e53935",
-                                "#ff6666",
-                                "#ff9999"
+                                "#b7e4c7",
+                                "#fff3b0",
+                                "#f8b4b4",
+                                "#d9d9d9"
                             ],
                             borderColor: [
-                                "#8b0000",
-                                "#b71c1c",
-                                "#d32f2f",
-                                "#ef5350"
+                                "#74c69d",
+                                "#f4d35e",
+                                "#e57373",
+                                "#bfbfbf"
                             ],
                             borderWidth: 1
                         }]
