@@ -1740,6 +1740,37 @@ td{
     transform: scale(1.03);
 }
 
+.btn-reuniao-estrategica{
+    margin-top: 35px;
+
+    width: 100px;
+    height: 34px;
+
+    border-radius: 6px;
+    border: 2px solid #111;
+
+    background: #e6e6e6;
+    color: #000;
+
+    cursor: pointer;
+
+    font-weight: 500;
+    font-size: 10px;
+
+    text-decoration: none;
+
+    justify-content: center;
+    align-items: center;
+
+    box-sizing: border-box;
+
+}
+
+.btn-reuniao-estrategica:hover{
+    background: #ffffff;
+    transform: scale(1.03);
+}
+
 @media (max-width: 900px){
     .layout-dashboard{
         min-width: 900px;
