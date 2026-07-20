@@ -76,8 +76,39 @@ const pluginValoresGraficos = {
     }
 };
 
+const pluginTextoCentroRosca = {
+    id: "textoCentroRosca",
+
+    afterDraw(chart, args, options) {
+        if (!options || options.display === false) return;
+        if (chart.config.type !== "doughnut") return;
+
+        const { ctx, chartArea } = chart;
+
+        if (!chartArea) return;
+
+        const centerX = (chartArea.left + chartArea.right) / 2;
+        const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+        ctx.save();
+
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillStyle = options.color || "#333";
+        ctx.font = `bold ${options.fontSize || 22}px Arial`;
+        ctx.fillText(options.textoPrincipal || "100%", centerX, centerY - 6);
+
+        ctx.font = `bold ${options.fontSizeSub || 10}px Arial`;
+        ctx.fillStyle = options.colorSub || "#666";
+        ctx.fillText(options.textoSecundario || "Total", centerX, centerY + 16);
+
+        ctx.restore();
+    }
+};
+
 if (typeof Chart !== "undefined") {
-    Chart.register(pluginValoresGraficos);
+    Chart.register(pluginValoresGraficos, pluginTextoCentroRosca);
 }
 
 function filtrarCardProjeto(tipo) {
@@ -141,6 +172,16 @@ function carregarDashboard() {
         .toUpperCase();
 };
 
+const classePrioridade = (prioridade) => {
+    const valor = normalizar(prioridade);
+
+    if (valor === "ALTA") return "alta";
+    if (valor === "MEDIA") return "media";
+    if (valor === "BAIXA") return "baixa";
+
+    return "";
+};
+
 const ehSemPrazoDefinido = (item) => {
     const status = normalizar(item.Status);
 
@@ -189,6 +230,8 @@ const ehSemPrazoDefinido = (item) => {
             window.grafico.destroy();
         }
 
+        const totalPrioridades = prioridadeAlta + prioridadeMedia + prioridadeBaixa;
+
         window.grafico = new Chart(ctxPrioridade.getContext("2d"), {
             type: "doughnut",
             data: {
@@ -222,44 +265,69 @@ const ehSemPrazoDefinido = (item) => {
                     }
                 },
 
-                plugins: {
-                    legend: {
-                        position: "bottom",
-                        labels: {
-                            boxWidth: 10,
-                            padding: 8,
-                            font: {
-                                size: 10
-                            }
-                        }
-                    },
+                onClick: function(event, elements, chart) {
+    const total = chart.data.datasets[0].data.reduce((acc, valor) => acc + valor, 0);
 
-                    title: {
-                        display: true,
-                        text: "Prioridade das Demandas",
-                        font: {
-                            size: 14,
-                            weight: "bold"
-                        }
-                    },
+    if (!elements || elements.length === 0 || total === 0) {
+        chart.options.plugins.textoCentroRosca.textoPrincipal = total === 0 ? "0%" : "100%";
+        chart.options.plugins.textoCentroRosca.textoSecundario = "Total";
+        chart.update();
+        return;
+    }
 
-                    datalabels: {
-                        display: true,
-                        color: "#333",
-                        anchor: "end",
-                        align: "end",
-                        offset: 8,
-                        clamp: true,
-                        clip: false,
-                        font: {
-                            size: 10,
-                            weight: "bold"
-                        },
-                        formatter: function(value) {
-                            return value > 0 ? value : "";
-                        }
-                    }
-                }
+    const index = elements[0].index;
+    const label = chart.data.labels[index];
+    const value = chart.data.datasets[0].data[index];
+
+    const percentual = ((value / total) * 100)
+        .toFixed(1)
+        .replace(".", ",") + "%";
+
+    chart.options.plugins.textoCentroRosca.textoPrincipal = percentual;
+    chart.options.plugins.textoCentroRosca.textoSecundario = label;
+
+    chart.update();
+},
+
+plugins: {
+    textoCentroRosca: {
+        display: true,
+        textoPrincipal: totalPrioridades > 0 ? "100%" : "0%",
+        textoSecundario: "Total",
+        fontSize: 22,
+        fontSizeSub: 10,
+        color: "#333",
+        colorSub: "#666"
+    },
+
+    valoresGraficos: {
+        display: true,
+        fontSize: 10,
+        fontWeight: "bold",
+        color: "#333",
+        offset: 18
+    },
+
+    legend: {
+        position: "bottom",
+        labels: {
+            boxWidth: 10,
+            padding: 8,
+            font: {
+                size: 10
+            }
+        }
+    },
+
+    title: {
+        display: true,
+        text: "Prioridade das Demandas",
+        font: {
+            size: 14,
+            weight: "bold"
+        }
+    }
+}
             }
         });
     }
@@ -437,7 +505,12 @@ const ehSemPrazoDefinido = (item) => {
                 <td>${item.Forum ?? ""}</td>
                 <td>${item["Status Geral"] ?? ""}</td>
                 <td>${item.Status ?? ""}</td>
-                <td>${item.Prioridade ?? ""}</td>
+                <td>
+                <span class="prioridade-com-bolinha">
+                    <span class="bolinha-prioridade ${classePrioridade(item.Prioridade)}"></span>
+                    ${item.Prioridade ?? ""}
+                </span>
+            </td>
             </tr>
         `).join("");
     }

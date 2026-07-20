@@ -1780,3 +1780,169 @@ td{
         overflow-x: auto;
     }
 }
+
+/* Ícones brancos dentro dos cards */
+.card-demanda{
+    position: relative;
+}
+
+.icone-card{
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    color: white;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+
+#tabelaProjetos td{
+    background: rgba(225,225,225,.72);
+    color: #111;
+    border-botton: 1px solid #d2d2d2;
+}
+
+.tabela-container{
+    background: rgba(225,225,225,.72);
+}
+
+/* =========================================
+   ÍCONES NOS CARDS DA ABA AÇÕES
+========================================= */
+
+.card-acao{
+    position: relative;
+}
+
+.icone-card-acao{
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    color: white;
+    font-size: 21px;
+    font-weight: 900;
+    line-height: 1;
+
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+/* =========================================
+   TABELA AÇÕES - CINZA MAIS CLARO
+========================================= */
+
+#tabelaAcoes td{
+    background: rgba(225,225,225,.72);
+    color: #111;
+    border-bottom: 1px solid #d2d2d2;
+}
+
+.tabela-acoes-layout{
+    background: rgba(225,225,225,.72);
+}
+
+/* =========================================
+   BOLINHAS DE PRIORIDADE NA TABELA DEMANDAS
+========================================= */
+
+.prioridade-com-bolinha{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.bolinha-prioridade{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Alta = vermelho */
+.bolinha-prioridade.alta{
+    background: #d00000;
+}
+
+/* Média = amarelo */
+.bolinha-prioridade.media{
+    background: #f2c200;
+}
+
+/* Baixa = verde */
+.bolinha-prioridade.baixa{
+    background: #2e9e44;
+}
+
+/* TOTAL - Azul escuro */
+.card-demanda.total{
+    background: linear-gradient(#1f3a5f, #14283f) !important;
+    color: white !important;
+}
+
+/* NO PRAZO - Verde mais fechado */
+.card-demanda.prazo{
+    background: linear-gradient(#9dcac6, #1b5e20) !important;
+    color: white !important;
+}
+
+/* ATENÇÃO - Amarelo/dourado mais fechado */
+.card-demanda.atencao{
+    background: linear-gradient(#f9a825, #c17900) !important;
+    color: white !important;
+}
+
+/* ATRASADO - Vermelho padrão */
+.card-demanda.atrasado{
+    background: linear-gradient(#ff2424, #d90000) !important;
+    color: white !important;
+}
+
+/* SEM PRAZO - Cinza */
+.card-demanda.sem-prazo{
+    background: linear-gradient(#7d7d7d, #555555) !important;
+    color: white !important;
+}
+
+/* =========================================
+   CORES DOS CARDS - ABA AÇÕES
+========================================= */
+
+/* TOTAL - Azul escuro */
+.card-acao.total-acoes{
+    background: linear-gradient(#1f3a5f, #14283f) !important;
+    color: white !important;
+}
+
+/* NO PRAZO - Verde */
+.card-acao.prazo-acoes{
+    background: linear-gradient(#9dcac6, #1b5e20) !important;
+    color: white !important;
+}
+
+/* ATENÇÃO - Amarelo/dourado */
+.card-acao.atencao-acoes{
+    background: linear-gradient(#f9a825, #c17900) !important;
+    color: white !important;
+}
+
+/* ATRASADO - Vermelho */
+.card-acao.atrasado-acoes{
+    background: linear-gradient(#ff2424, #d90000) !important;
+    color: white !important;
+}
+
+/* SEM AÇÃO - Cinza */
+.card-acao.sem-acao-acoes{
+    background: linear-gradient(#7d7d7d, #555555) !important;
+    color: white !important;
+}
