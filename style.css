@@ -1219,10 +1219,10 @@ td{
 .cards-demandas-vertical{
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 8px;
     width: 145px;
 
-    transform: translateY(-58px);
+    transform: translateY(-65px);
 }
 
 .card-demanda{
@@ -1323,6 +1323,8 @@ td{
     max-height: 180px;
     overflow-y: auto;
     overflow-x: auto;
+
+    transform: translateY(15px);
 }
 
 .tabela-container h2{
@@ -1664,7 +1666,7 @@ td{
     width: 850px;
     max-width: 850px;
 
-    margin: 5px auto 0 auto;
+    margin: -15px auto 0 auto;
 
     background: rgba(180,180,180,.75);
     border-radius: 0;
@@ -1946,3 +1948,17 @@ td{
     background: linear-gradient(#7d7d7d, #555555) !important;
     color: white !important;
 }
+
+
+/* CANCELADO - Vinho */
+.card-demanda.cancelado{
+    background: linear-gradient(#7b0f1d, #4a0710) !important;
+    color: white !important;
+}
+
+/* CONCLUÍDO - Cinza */
+.card-demanda.concluido{
+    background: linear-gradient(#7d7d7d, #555555) !important;
+    color: white !important;
+}
+

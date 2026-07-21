@@ -127,14 +127,20 @@
 
         <div class="card card-demanda atrasado" onclick="filtrarCardProjeto('ATRASADO')">
             <h2>Atrasado</h2>
-            <span class="icone-card">×</span>
+            <span class="icone-card">X</span>
             <p id="atrasado">0</p>
         </div>
 
-        <div class="card card-demanda sem-prazo" onclick="filtrarCardProjeto('SEM_PRAZO_DEFINIDO')">
-            <h2>Sem Prazo</h2>
-            <span class="icone-card">?</span>
-            <p id="sem_prazo_definido">0</p>
+        <div class="card card-demanda cancelado" onclick="filtrarCardProjeto('CANCELADO')">
+            <h2>Cancelado</h2>     
+            <span class="icone-card">⊘</span>
+            <p id="cancelado">0</p>
+        </div>
+
+        <div class="card card-demanda concluido" onclick="filtrarCardProjeto('CONCLUIDO')">
+            <h2>Concluído</h2>
+            <span class="icone-card">★</span>
+            <p id="concluido">0</p>
         </div>
 
     </div>

@@ -107,8 +107,56 @@ const pluginTextoCentroRosca = {
     }
 };
 
+const pluginTotalPorGerente = {
+    id: "totalPorGerente",
+
+    afterDraw(chart, args, options) {
+        if (!options || options.display !== true) return;
+        if (chart.config.type !== "bar") return;
+
+        const { ctx, scales } = chart;
+        const xScale = scales.x;
+
+        if (!xScale) return;
+
+        ctx.save();
+
+        ctx.fillStyle = options.color || "#000";
+        ctx.font = `bold ${options.fontSize || 14}px Arial`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        chart.data.labels.forEach((label, index) => {
+            let total = 0;
+
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+
+                if (!meta.hidden) {
+                    total += Number(dataset.data[index] || 0);
+                }
+            });
+
+            if (total === 0) return;
+
+            const x = xScale.getPixelForValue(index);
+
+            /*
+              Posição do total:
+              - xScale.top é a linha do eixo X.
+              - +12 coloca o número acima do nome do gerente.
+            */
+            const y = xScale.top + (options.offsetY || 13);
+
+            ctx.fillText(total, x, y);
+        });
+
+        ctx.restore();
+    }
+};
+
 if (typeof Chart !== "undefined") {
-    Chart.register(pluginValoresGraficos, pluginTextoCentroRosca);
+    Chart.register(pluginValoresGraficos, pluginTextoCentroRosca, pluginTotalPorGerente);
 }
 
 function filtrarCardProjeto(tipo) {
@@ -182,10 +230,24 @@ const classePrioridade = (prioridade) => {
     return "";
 };
 
-const ehSemPrazoDefinido = (item) => {
-    const status = normalizar(item.Status);
+const ehCancelado = (item) => {
+    const statusGeral = normalizar(item["Status Geral"]);
+    const statusPrazo = normalizar(item.Status);
 
-    return status.includes("SEM PRAZO");
+    return (
+        statusGeral === "CANCELADO" ||
+        statusPrazo === "CANCELADO"
+    );
+};
+
+const ehConcluido = (item) => {
+    const statusGeral = normalizar(item["Status Geral"]);
+    const statusPrazo = normalizar(item.Status);
+
+    return (
+        statusGeral === "CONCLUIDO" ||
+        statusPrazo === "CONCLUIDO"
+    );
 };
 
     const setTexto = (id, valor) => {
@@ -207,7 +269,10 @@ const ehSemPrazoDefinido = (item) => {
     const atrasado = projetos.filter(p => normalizar(p.Status) === "ATRASADO").length;
     const atencao = projetos.filter(p => normalizar(p.Status) === "ATENCAO").length;
     const prazo = projetos.filter(p => normalizar(p.Status) === "NO PRAZO").length;
-    const semPrazoDefinido = projetos.filter(p => ehSemPrazoDefinido(p)).length;
+    
+    const cancelado = projetos.filter(p => ehCancelado(p)).length;
+    const concluido = projetos.filter(p => ehConcluido(p)).length;
+
 
     const prioridadeAlta = projetos.filter(p => normalizar(p.Prioridade) === "ALTA").length;
     const prioridadeMedia = projetos.filter(p => normalizar(p.Prioridade) === "MEDIA").length;
@@ -217,7 +282,9 @@ const ehSemPrazoDefinido = (item) => {
     setTexto("atrasado", atrasado);
     setTexto("atencao", atencao);
     setTexto("prazo", prazo);
-    setTexto("sem_prazo_definido", semPrazoDefinido);
+    setTexto("cancelado", cancelado);
+    setTexto("concluido", concluido);
+
 
     // =========================
     // GRÁFICO ROSCA
@@ -385,7 +452,14 @@ plugins: {
                 },
 
                 plugins: {
-                    legend: {
+                   totalPorGerente: {
+                       display: true,
+                       fontSize: 12,
+                       color: "#000",
+                       offsetY: 13
+                   },
+
+                   legend: {
                         position: "bottom",
                         labels: {
                             boxWidth: 10,
@@ -426,41 +500,62 @@ plugins: {
                     }
                 },
 
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grace: "25%",
-                        ticks: {
-                            precision: 0,
-                            font: {
-                                size: 10
-                            }
-                        }
-                    },
+                
+scales: {
+    y: {
+        beginAtZero: true,
+        grace: "25%",
 
-                    x: {
-                        ticks: {
-                            autoSkip: false,
-                            maxRotation: 0,
-                            minRotation: 0,
-                            font: {
-                                size: 9
-                            },
-                            callback: function(value) {
-                                const label = this.getLabelForValue(value);
+        ticks: {
+            display: false
+        },
 
-                                if (!label) return "";
+        grid: {
+            display: false,
+            drawBorder: false
+        },
 
-                                const partes = label.split(" ");
+        border: {
+            display: false
+        }
+    },
 
-                                if (partes.length >= 3) {
-                                    return [
-                                        partes[0],
-                                        partes.slice(1).join(" ")
-                                    ];
-                                }
+    x: {
+        grid: {
+            display: false,
+            drawBorder: false
+        },
 
-                                return label;
+        border: {
+            display: false
+        },
+
+        ticks: {
+            autoSkip: false,
+            maxRotation: 0,
+            minRotation: 0,
+            padding: 13,
+
+            font: {
+                size: 8
+            },
+
+            callback: function(value) {
+                const label = this.getLabelForValue(value);
+
+                if (!label) return "";
+
+                const partes = label.split(" ");
+
+                if (partes.length >= 3) {
+                    return [
+                        partes[0],
+                        partes.slice(1).join(" ")
+                    ];
+                }
+
+                return label;
+
                             }
                         }
                     }
@@ -481,8 +576,10 @@ plugins: {
         listaFiltrada = listaFiltrada.filter(i => normalizar(i.Status) === "NO PRAZO");
     } else if (filtroCardProjeto === "ATENÇÃO") {
         listaFiltrada = listaFiltrada.filter(i => normalizar(i.Status) === "ATENCAO");
-    } else if (filtroCardProjeto === "SEM_PRAZO_DEFINIDO") {
-        listaFiltrada = listaFiltrada.filter(i => ehSemPrazoDefinido(i));
+    } else if (filtroCardProjeto === "CANCELADO") {
+    listaFiltrada = listaFiltrada.filter(i => ehCancelado(i));
+} else if (filtroCardProjeto === "CONCLUIDO") {
+    listaFiltrada = listaFiltrada.filter(i => ehConcluido(i));
 }
      
 
@@ -642,6 +739,33 @@ function carregarAcoes() {
             const totalAtrasado = dados.filter(i => normalizar(i["Status Ação"]) === "ATRASADO").length;
             const semAcao = dados.filter(i => ehSemAcao(i)).length;
 
+const statusGraficoAcoes = [
+    {
+        label: "No Prazo",
+        valor: totalPrazo,
+        backgroundColor: "#b7e4c7",
+        borderColor: "#74c69d"
+    },
+    {
+        label: "Atenção",
+        valor: totalAtencao,
+        backgroundColor: "#fff3b0",
+        borderColor: "#f4d35e"
+    },
+    {
+        label: "Atrasado",
+        valor: totalAtrasado,
+        backgroundColor: "#f8b4b4",
+        borderColor: "#e57373"
+    },
+    {
+        label: "Sem Ação",
+        valor: semAcao,
+        backgroundColor: "#d9d9d9",
+        borderColor: "#bfbfbf"
+    }
+].filter(item => item.valor > 0);
+
             // Cards
             if (document.getElementById("total_acoes")) {
                 document.getElementById("total_acoes").innerText = dados.length;
@@ -677,30 +801,15 @@ function carregarAcoes() {
                 window.graficoAcoes = new Chart(contexto, {
                     type: "bar",
                     data: {
-                        labels: ["No Prazo", "Atenção", "Atrasado", "Sem Ação"],
-                        datasets: [{
-                            label: "Quantidade",
-                            data: [
-                                totalPrazo,
-                                totalAtencao,
-                                totalAtrasado,
-                                semAcao
-                            ],
-                            backgroundColor: [
-                                "#b7e4c7",
-                                "#fff3b0",
-                                "#f8b4b4",
-                                "#d9d9d9"
-                            ],
-                            borderColor: [
-                                "#74c69d",
-                                "#f4d35e",
-                                "#e57373",
-                                "#bfbfbf"
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
+    labels: statusGraficoAcoes.map(item => item.label),
+    datasets: [{
+        label: "Quantidade",
+        data: statusGraficoAcoes.map(item => item.valor),
+        backgroundColor: statusGraficoAcoes.map(item => item.backgroundColor),
+        borderColor: statusGraficoAcoes.map(item => item.borderColor),
+        borderWidth: 1
+    }]
+},
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
@@ -734,22 +843,40 @@ function carregarAcoes() {
                             }
                         },
 
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grace: "25%",
-                                ticks: {
-                                    precision: 0,
-                                    font: {
-                                        size: 10
-                                    }
-                                }
-                            },
+                        
+scales: {
+    y: {
+        beginAtZero: true,
+        grace: "25%",
 
-                            x: {
-                                ticks: {
-                                    font: {
-                                        size: 10
+        ticks: {
+            display: false
+        },
+
+        grid: {
+            display: false,
+            drawBorder: false
+        },
+
+        border: {
+            display: false
+        }
+    },
+
+    x: {
+        grid: {
+            display: false,
+            drawBorder: false
+        },
+
+        border: {
+            display: false
+        },
+
+        ticks: {
+            font: {
+                size: 10
+
                                     }
                                 }
                             }
