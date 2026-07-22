@@ -2,6 +2,16 @@ let filtroCardProjeto = "";
 let filtroCard = "";
 let projetosCache = [];
 
+let ordenacaoTabelaProjetos = {
+    coluna: "ID",
+    direcao: "asc"
+};
+
+let ordenacaoTabelaAcoes = {
+    coluna: "ID",
+    direcao: "asc"
+};
+
 function extrairNumeroLog(id) {
     const texto = (id || "").toString().toUpperCase().trim();
 
@@ -10,6 +20,16 @@ function extrairNumeroLog(id) {
     if (!match) return 9999;
 
     return parseInt(match[1], 10);
+}
+
+function obterPMOResponsavel(item) {
+    return (
+        item["PMO Responsável"] ??
+        item["PMO Responsavel"] ??
+        item["PMO responsável"] ??
+        item["PMO responsavel"] ??
+        ""
+    );
 }
 
 /* Plugin próprio para mostrar valores nos gráficos */
@@ -171,6 +191,188 @@ function filtrarCardProjeto(tipo) {
     carregarDashboard();
 }
 
+function ordenarTabelaProjetos(coluna) {
+    if (ordenacaoTabelaProjetos.coluna === coluna) {
+        ordenacaoTabelaProjetos.direcao =
+            ordenacaoTabelaProjetos.direcao === "asc" ? "desc" : "asc";
+    } else {
+        ordenacaoTabelaProjetos.coluna = coluna;
+        ordenacaoTabelaProjetos.direcao = "asc";
+    }
+
+    carregarDashboard();
+}
+
+function aplicarOrdenacaoTabelaProjetos(lista) {
+    const coluna = ordenacaoTabelaProjetos.coluna;
+    const direcao = ordenacaoTabelaProjetos.direcao;
+    const multiplicador = direcao === "asc" ? 1 : -1;
+
+    return [...lista].sort((a, b) => {
+        if (coluna === "ID") {
+            return (extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID)) * multiplicador;
+        }
+
+        let valorA = "";
+        let valorB = "";
+
+        if (coluna === "Projeto") {
+            valorA = a.Projeto || "";
+            valorB = b.Projeto || "";
+        }
+
+        else if (coluna === "Gerente") {
+            valorA = a.Gerente || "";
+            valorB = b.Gerente || "";
+        }
+
+        else if (coluna === "PMO Responsável") {
+            valorA = obterPMOResponsavel(a);
+            valorB = obterPMOResponsavel(b);
+        }
+
+        else if (coluna === "Forum") {
+            valorA = a.Forum || "";
+            valorB = b.Forum || "";
+        }
+
+        else if (coluna === "Status Geral") {
+            valorA = a["Status Geral"] || "";
+            valorB = b["Status Geral"] || "";
+        }
+
+        else if (coluna === "Status") {
+            valorA = a.Status || "";
+            valorB = b.Status || "";
+        }
+
+        else if (coluna === "Prioridade") {
+            valorA = a.Prioridade || "";
+            valorB = b.Prioridade || "";
+        }
+
+        const comparacao = valorA
+            .toString()
+            .localeCompare(
+                valorB.toString(),
+                "pt-BR",
+                {
+                    sensitivity: "base",
+                    numeric: true
+                }
+            );
+
+        if (comparacao !== 0) {
+            return comparacao * multiplicador;
+        }
+
+        // Critério secundário para manter LOG em ordem dentro de grupos iguais
+        return extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID);
+    });
+}
+
+function ordenarTabelaAcoes(coluna) {
+    if (ordenacaoTabelaAcoes.coluna === coluna) {
+        ordenacaoTabelaAcoes.direcao =
+            ordenacaoTabelaAcoes.direcao === "asc" ? "desc" : "asc";
+    } else {
+        ordenacaoTabelaAcoes.coluna = coluna;
+        ordenacaoTabelaAcoes.direcao = "asc";
+    }
+
+    carregarAcoes();
+}
+
+function aplicarOrdenacaoTabelaAcoes(lista) {
+    const coluna = ordenacaoTabelaAcoes.coluna;
+    const direcao = ordenacaoTabelaAcoes.direcao;
+    const multiplicador = direcao === "asc" ? 1 : -1;
+
+    const normalizarTexto = (valor) => {
+        return (valor || "")
+            .toString()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .toUpperCase();
+    };
+
+    const converterData = (valor) => {
+        if (!valor || valor === "-") return null;
+
+        const data = new Date(valor);
+
+        if (!isNaN(data)) {
+            return data.getTime();
+        }
+
+        return null;
+    };
+
+    return [...lista].sort((a, b) => {
+        if (coluna === "ID") {
+            return (extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID)) * multiplicador;
+        }
+
+        if (coluna === "Prazo da Ação") {
+            const dataA = converterData(a["Prazo da Ação"]);
+            const dataB = converterData(b["Prazo da Ação"]);
+
+            if (dataA === null && dataB === null) {
+                return extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID);
+            }
+
+            if (dataA === null) return 1;
+            if (dataB === null) return -1;
+
+            return (dataA - dataB) * multiplicador;
+        }
+
+        let valorA = "";
+        let valorB = "";
+
+        if (coluna === "Projeto") {
+            valorA = a.Projeto || "";
+            valorB = b.Projeto || "";
+        }
+
+        else if (coluna === "Status Ação") {
+            valorA = a["Status Ação"] || "";
+            valorB = b["Status Ação"] || "";
+        }
+
+        else if (coluna === "Ações") {
+            valorA = a["Ações"] || "";
+            valorB = b["Ações"] || "";
+        }
+
+        else if (coluna === "Responsável") {
+            valorA = a["Responsável"] || "";
+            valorB = b["Responsável"] || "";
+        }
+
+        else if (coluna === "PMO Responsável") {
+            valorA = obterPMOResponsavel(a);
+            valorB = obterPMOResponsavel(b);
+        }
+
+        const comparacao = normalizarTexto(valorA).localeCompare(
+            normalizarTexto(valorB),
+            "pt-BR",
+            {
+                sensitivity: "base",
+                numeric: true
+            }
+        );
+
+        if (comparacao !== 0) {
+            return comparacao * multiplicador;
+        }
+
+        return extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID);
+    });
+}
+
 // =============================
 // ✅ 1. FILTROS PROJETOS
 // =============================
@@ -210,6 +412,7 @@ function carregarDashboard() {
     const gerente = document.getElementById("filtroGerente")?.value || "";
     const forum = document.getElementById("filtroForum")?.value || "";
     const status = document.getElementById("filtroStatus")?.value || "";
+    const pesquisa = document.getElementById("pesquisaProjetos")?.value || "";
 
     const normalizar = (valor) => {
     return (valor || "")
@@ -228,6 +431,31 @@ const classePrioridade = (prioridade) => {
     if (valor === "BAIXA") return "baixa";
 
     return "";
+};
+
+   const linhaContemPesquisa = (item, termo) => {
+    const pesquisaNormalizada = normalizar(termo);
+
+    if (!pesquisaNormalizada) return true;
+
+    const textoLinha = [
+        item.ID,
+        item.Projeto,
+        item.Gerente,
+        obterPMOResponsavel(item),
+        item.Forum,
+        item["Status Geral"],
+        item.Status,
+        item.Prioridade,
+        item["Ações"],
+        item["Responsável"],
+        item["Status Ação"],
+        item["Prazo da Ação"]
+    ]
+        .map(valor => normalizar(valor))
+        .join(" ");
+
+    return textoLinha.includes(pesquisaNormalizada);
 };
 
 const ehCancelado = (item) => {
@@ -258,12 +486,13 @@ const ehConcluido = (item) => {
     };
 
     let projetos = projetosCache.filter(p => {
-        const okGerente = !gerente || p.Gerente === gerente;
-        const okForum = !forum || p.Forum === forum;
-        const okStatus = !status || p["Status Geral"] === status;
+    const okGerente = !gerente || p.Gerente === gerente;
+    const okForum = !forum || p.Forum === forum;
+    const okStatus = !status || p["Status Geral"] === status;
+    const okPesquisa = linhaContemPesquisa(p, pesquisa);
 
-        return okGerente && okForum && okStatus;
-    });
+    return okGerente && okForum && okStatus && okPesquisa;
+});
 
     const total = projetos.length;
     const atrasado = projetos.filter(p => normalizar(p.Status) === "ATRASADO").length;
@@ -587,9 +816,7 @@ scales: {
     // TABELA
     // =========================
 
-    listaFiltrada = [...listaFiltrada].sort((a, b) => {
-    return extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID);
-});
+    listaFiltrada = aplicarOrdenacaoTabelaProjetos(listaFiltrada);
 
     const tabela = document.querySelector("#tabelaProjetos tbody");
 
@@ -599,6 +826,7 @@ scales: {
                 <td>${item.ID ?? ""}</td>
                 <td>${item.Projeto ?? ""}</td>
                 <td>${item.Gerente ?? ""}</td>
+                <td>${obterPMOResponsavel(item)}</td>
                 <td>${item.Forum ?? ""}</td>
                 <td>${item["Status Geral"] ?? ""}</td>
                 <td>${item.Status ?? ""}</td>
@@ -684,6 +912,7 @@ function carregarAcoes() {
     const gerente = document.getElementById("filtroGerenteAcoes")?.value || "";
     const forum = document.getElementById("filtroForumAcoes")?.value || "";
     const statusFiltro = document.getElementById("filtroStatusAcoes")?.value || "";
+    const pesquisaAcoes = document.getElementById("pesquisaAcoes")?.value || "";
 
     fetch(`https://dashboard-logistica-v2.onrender.com/acoes?gerente=${encodeURIComponent(gerente)}&forum=${encodeURIComponent(forum)}`)
         .then(res => res.json())
@@ -697,6 +926,29 @@ function carregarAcoes() {
                     .trim()
                     .toUpperCase();
             };
+
+            const linhaContemPesquisaAcoes = (item, termo) => {
+    const pesquisaNormalizada = normalizar(termo);
+
+    if (!pesquisaNormalizada) return true;
+
+    const textoLinha = [
+        item.ID,
+        item.Projeto,
+        item.Gerente,
+        item.Forum,
+        item["Status Geral"],
+        item["Status Ação"],
+        item["Ações"],
+        item["Prazo da Ação"],
+        item["Responsável"],
+        obterPMOResponsavel(item)
+    ]
+        .map(valor => normalizar(valor))
+        .join(" ");
+
+    return textoLinha.includes(pesquisaNormalizada);
+};
 
             const ehSemAcao = (item) => {
                 const status = normalizar(item["Status Ação"]);
@@ -734,6 +986,11 @@ function carregarAcoes() {
           });
      }
 
+// Aplica pesquisa geral na aba Ações
+if (pesquisaAcoes) {
+    dados = dados.filter(i => linhaContemPesquisaAcoes(i, pesquisaAcoes));
+}
+
             const totalPrazo = dados.filter(i => normalizar(i["Status Ação"]) === "NO PRAZO").length;
             const totalAtencao = dados.filter(i => normalizar(i["Status Ação"]) === "ATENCAO").length;
             const totalAtrasado = dados.filter(i => normalizar(i["Status Ação"]) === "ATRASADO").length;
@@ -743,25 +1000,25 @@ const statusGraficoAcoes = [
     {
         label: "No Prazo",
         valor: totalPrazo,
-        backgroundColor: "#b7e4c7",
+        backgroundColor: "#74c69d",
         borderColor: "#74c69d"
     },
     {
         label: "Atenção",
         valor: totalAtencao,
-        backgroundColor: "#fff3b0",
+        backgroundColor: "#ffd166",
         borderColor: "#f4d35e"
     },
     {
         label: "Atrasado",
         valor: totalAtrasado,
-        backgroundColor: "#f8b4b4",
+        backgroundColor: "#ef767a",
         borderColor: "#e57373"
     },
     {
         label: "Sem Ação",
         valor: semAcao,
-        backgroundColor: "#d9d9d9",
+        backgroundColor: "#b8b8b8",
         borderColor: "#bfbfbf"
     }
 ].filter(item => item.valor > 0);
@@ -905,6 +1162,9 @@ scales: {
             }
 
             // Tabela
+ 
+            listaFiltrada = aplicarOrdenacaoTabelaAcoes(listaFiltrada);
+ 
             const tabela = document.querySelector("#tabelaAcoes tbody");
 
             if (tabela) {
@@ -928,6 +1188,7 @@ scales: {
                             <td>${item["Ações"] ?? ""}</td>
                             <td>${dataFormatada}</td>
                             <td>${item["Responsável"] ?? ""}</td>
+                            <td>${obterPMOResponsavel(item)}</td>
                         </tr>
                     `;
                 }).join("");

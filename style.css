@@ -1049,6 +1049,8 @@ td{
     border-radius: 0 !important;
     padding: 0 !important;
     overflow: visible !important;
+
+    transform: translateY(-30px) !important;
 }
 
 /* Canvas do gráfico de barras */
@@ -1073,7 +1075,7 @@ td{
     padding: 0 !important;
     overflow: visible !important;
 
-    transform: translateY(-12px)
+    transform: translateY(-28px)
 }
 
 /* Canvas do donut */
@@ -1219,7 +1221,7 @@ td{
 .cards-demandas-vertical{
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     width: 145px;
 
     transform: translateY(-65px);
@@ -1399,7 +1401,7 @@ td{
 .cards-acoes-vertical{
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 17px;
     width: 150px;
 
     transform: translateY(-58px);
@@ -1446,7 +1448,7 @@ td{
     padding: 0 !important;
     overflow: visible !important;
 
-    transform: translateY(-5px);
+    transform: translateY(-48px);
 }
 
 #graficoAcoes{
@@ -1962,3 +1964,243 @@ td{
     color: white !important;
 }
 
+/* Cabeçalhos clicáveis da tabela de demandas */
+#tabelaProjetos th{
+    cursor: pointer;
+    user-select: none;
+}
+
+#tabelaProjetos th:hover{
+    filter: brightness(1.12);
+}
+
+/* Cabeçalhos clicáveis da tabela de ações */
+#tabelaAcoes th{
+    cursor: pointer;
+    user-select: none;
+}
+
+#tabelaAcoes th:hover{
+    filter: brightness(1.12);
+}
+
+/* =========================================
+   BARRA DE PESQUISA - DEMANDAS
+========================================= */
+
+.item-pesquisa input{
+    width: 210px;
+    height: 24px;
+
+    border: 2px solid #1f3a5f;
+    background: white;
+
+    font-size: 13px;
+    padding: 2px 8px;
+
+    outline: none;
+}
+
+.item-pesquisa input:focus{
+    border-color: #DA291C;
+}
+
+.btn-limpar-pesquisa{
+    height: 24px;
+    border: 1px solid #1f3a5f;
+    background: #e6e6e6;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* =========================================
+   PESQUISA ACIMA DA TABELA - DEMANDAS
+========================================= */
+
+/* =========================================
+   PESQUISA ACIMA DA TABELA - DEMANDAS
+========================================= */
+
+.linha-pesquisa-demandas{
+    width: 800px;
+    max-width: 800px;
+
+    margin: -15px auto 10px auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* aumenta levemente a separação entre input e botão */
+    gap: 15px;
+
+    /* traz o conjunto um pouco para a esquerda */
+    transform: translateX(70px);
+
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.linha-pesquisa-demandas input{
+    width: 380px;
+    height: 26px;
+
+    border: 2px solid #1f3a5f;
+    background: white;
+
+    font-size: 13px;
+    padding: 2px 8px;
+
+    outline: none;
+}
+
+.linha-pesquisa-demandas input:focus{
+    border-color: #DA291C;
+}
+
+.btn-limpar-pesquisa{
+    height: 26px;
+    padding: 0 50px;
+
+    margin-left: 40px;
+
+    border: 2px solid #1f3a5f;
+    background: #e6e6e6;
+    color: #000;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.btn-limpar-pesquisa:hover{
+    background: #ffffff;
+}
+
+/* =========================================
+   PESQUISA ACIMA DA TABELA - AÇÕES
+========================================= */
+
+.linha-pesquisa-acoes{
+    width: 760px;
+    max-width: 760px;
+
+    margin: -40px auto 20px auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 8px;
+
+    transform: translateX(90px);
+
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.linha-pesquisa-acoes input{
+    width: 380px;
+    height: 26px;
+
+    border: 2px solid #1f3a5f;
+    background: white;
+
+    font-size: 13px;
+    padding: 2px 8px;
+
+    outline: none;
+}
+
+.linha-pesquisa-acoes input:focus{
+    border-color: #DA291C;
+}
+
+.btn-limpar-pesquisa-acoes{
+    height: 26px;
+    padding: 0 50px;
+
+    margin-left: 40px;
+
+    border: 2px solid #1f3a5f;
+    background: #e6e6e6;
+    color: #000;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.btn-limpar-pesquisa-acoes:hover{
+    background: #ffffff;
+}
+
+/* =========================================
+   ALINHAMENTO DOS ÍCONES DOS CARDS DEMANDAS
+========================================= */
+
+.card-demanda{
+    position: relative;
+}
+
+/* Caixa fixa para todos os ícones */
+.card-demanda .icone-card{
+    position: absolute;
+
+    left: 8px;
+    top: 50%;
+
+    width: 24px;
+    height: 24px;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+/* =========================================
+   ALINHAMENTO DOS ÍCONES DOS CARDS DEMANDAS
+========================================= */
+
+.card-acao{
+    position: relative;
+}
+
+/* Caixa fixa para todos os ícones */
+.card-acao .icone-card{
+    position: absolute;
+
+    left: 8px;
+    top: 50%;
+
+    width: 24px;
+    height: 24px;
+
+    transform: translateY(-50%);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+
+    opacity: 0.95;
+    pointer-events: none;
+}

@@ -160,6 +160,24 @@
 
 </div>
 
+<div class="linha-pesquisa-demandas">
+    <span>Pesquisar:</span>
+
+    <input 
+        type="text" 
+        id="pesquisaProjetos" 
+        placeholder="Digite ID, demanda, gerente..."
+        oninput="carregarDashboard()"
+    >
+
+    <button 
+        class="btn-limpar-pesquisa" 
+        onclick="document.getElementById('pesquisaProjetos').value=''; carregarDashboard();"
+    >
+        Limpar
+    </button>
+</div>
+
 
 <!-- TABELA -->
 <div class="tabela-container">
@@ -167,15 +185,16 @@
 
 <table id="tabelaProjetos">
 <thead>
-<tr>
-<th>ID</th>
-<th>Demanda</th>
-<th>Gerente</th>
-<th>Fórum</th>
-<th>Status Geral</th>
-<th>Status</th>
-<th>Prioridade</th>
-</tr>
+    <tr>
+        <th onclick="ordenarTabelaProjetos('ID')">ID</th>
+        <th onclick="ordenarTabelaProjetos('Projeto')">Demanda</th>
+        <th onclick="ordenarTabelaProjetos('Gerente')">Gerente</th>
+        <th onclick="ordenarTabelaProjetos('PMO Responsável')">PMO Responsável</th>
+        <th onclick="ordenarTabelaProjetos('Forum')">Fórum</th>
+        <th onclick="ordenarTabelaProjetos('Status Geral')">Status Geral</th>
+        <th onclick="ordenarTabelaProjetos('Status')">Status</th>
+        <th onclick="ordenarTabelaProjetos('Prioridade')">Prioridade</th>
+    </tr>
 </thead>
 <tbody></tbody>
 </table>

@@ -120,7 +120,7 @@
 
                 <div class="card card-acao atrasado-acoes" onclick="filtrarCardAcao('ATRASADO')">
                     <h2>Atrasado</h2>
-                    <span class="icone-card">×</span>
+                    <span class="icone-card">X</span>
                     <p id="acoes_atrasadas">0</p>
                 </div>
 
@@ -139,6 +139,26 @@
 
         </div>
 
+
+<div class="linha-pesquisa-acoes">
+    <span>Pesquisar:</span>
+
+    <input 
+        type="text" 
+        id="pesquisaAcoes" 
+        placeholder="Digite ID, demanda, ação, responsável..."
+        oninput="carregarAcoes()"
+    >
+
+    <button 
+        class="btn-limpar-pesquisa-acoes" 
+        onclick="document.getElementById('pesquisaAcoes').value=''; carregarAcoes();"
+    >
+        Limpar
+    </button>
+</div>
+
+
         <!-- TABELA -->
         <div class="tabela-container tabela-acoes-layout">
 
@@ -146,15 +166,16 @@
 
             <table id="tabelaAcoes">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Demanda</th>
-                        <th>Status Ação</th>
-                        <th>Ações</th>
-                        <th>Prazo da Ação</th>
-                        <th>Responsável</th>
-                    </tr>
-                </thead>
+    <tr>
+        <th onclick="ordenarTabelaAcoes('ID')">ID</th>
+        <th onclick="ordenarTabelaAcoes('Projeto')">Demanda</th>
+        <th onclick="ordenarTabelaAcoes('Status Ação')">Status Ação</th>
+        <th onclick="ordenarTabelaAcoes('Ações')">Ações</th>
+        <th onclick="ordenarTabelaAcoes('Prazo da Ação')">Prazo da Ação</th>
+        <th onclick="ordenarTabelaAcoes('Responsável')">Responsável</th>
+        <th onclick="ordenarTabelaAcoes('PMO Responsável')">PMO Responsável</th>
+    </tr>
+</thead>
                 <tbody></tbody>
             </table>
 
