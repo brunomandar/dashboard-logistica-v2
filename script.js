@@ -478,6 +478,26 @@ const ehConcluido = (item) => {
     );
 };
 
+const escaparAtributoHtml = (valor) => {
+    return (valor || "")
+        .toString()
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+};
+
+const obterJustificativaCancelamento = (item) => {
+    const acao = item["Ações"] || item["Acoes"] || "";
+
+    if (!acao) {
+        return "Sem justificativa de cancelamento cadastrada.";
+    }
+
+    return `Justificativa do cancelamento: ${acao}`;
+};
+
     const setTexto = (id, valor) => {
         const elemento = document.getElementById(id);
         if (elemento) {
@@ -828,8 +848,19 @@ scales: {
                 <td>${item.Gerente ?? ""}</td>
                 <td>${obterPMOResponsavel(item)}</td>
                 <td>${item.Forum ?? ""}</td>
-                <td>${item["Status Geral"] ?? ""}</td>
-                <td>${item.Status ?? ""}</td>
+                <td
+    class="${normalizar(item["Status Geral"]) === "CANCELADO" ? "celula-cancelada-tooltip" : ""}"
+    title="${normalizar(item["Status Geral"]) === "CANCELADO" ? escaparAtributoHtml(obterJustificativaCancelamento(item)) : ""}"
+>
+    ${item["Status Geral"] ?? ""}
+</td>
+
+<td 
+    class="${normalizar(item.Status) === "CANCELADO" ? "celula-cancelada-tooltip" : ""}"
+    title="${normalizar(item.Status) === "CANCELADO" ? escaparAtributoHtml(obterJustificativaCancelamento(item)) : ""}"
+>
+    ${item.Status ?? ""}
+</td>
                 <td>
                 <span class="prioridade-com-bolinha">
                     <span class="bolinha-prioridade ${classePrioridade(item.Prioridade)}"></span>

@@ -2204,3 +2204,13 @@ td{
     opacity: 0.95;
     pointer-events: none;
 }
+
+/* =========================================
+   TOOLTIP PARA DEMANDAS CANCELADAS
+========================================= */
+
+.celula-cancelada-tooltip{
+    cursor: default;
+    font-weight: normal;
+    text-decoration: none;
+}
