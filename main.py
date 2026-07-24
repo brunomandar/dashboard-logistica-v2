@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Response
+from fastapi.responses import PlainTextResponse
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
@@ -31,12 +33,13 @@ client = MongoClient(MONGO_URL)
 db = client["dashboard_logistica"]
 collection = db["projetos"]
 
-@app.get("/health")
+@app.get("/health", response_class=PlainTextResponse)
 def health():
-    return {
-        "status": "ok",
-        "service": "dashboard-logistica-api"
-    }
+    return "OK"
+
+@app.head("/health")
+def health_head():
+    return Response(status_code=200)
 
 @app.get("/")
 def home():
