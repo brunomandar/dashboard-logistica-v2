@@ -1216,7 +1216,7 @@ scales: {
                             <td>${item.ID ?? ""}</td>
                             <td>${item.Projeto ?? ""}</td>
                             <td>${item["Status Ação"] ?? ""}</td>
-                            <td>${item["Ações"] ?? ""}</td>
+                            <td class="celula-texto-acoes">${formatarTextoAcoes(item["Ações"])}</td>
                             <td>${dataFormatada}</td>
                             <td>${item["Responsável"] ?? ""}</td>
                             <td>${obterPMOResponsavel(item)}</td>
@@ -1237,6 +1237,37 @@ function filtrarCardAcao(tipo) {
         filtroCard = tipo;
     }
     carregarAcoes(); // Recarrega aplicando a regra
+}
+
+function formatarTextoAcoes(valor) {
+    if (!valor) return "";
+
+    let texto = valor
+        .toString()
+        .replace(/_x000D_/g, "\n")
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n");
+
+    // Escapa HTML para evitar quebrar a tabela
+    texto = texto
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+
+    // Se já vier com quebras de linha da planilha, mantém
+    if (texto.includes("\n")) {
+        return texto.replace(/\n+/g, "<br>");
+    }
+
+    // Se vier tudo em uma linha, quebra antes de cada nova data no padrão 30/06 -
+    texto = texto.replace(
+        /\s+(\d{2}\/\d{2}(?:\s*(?:a|à|-)\s*\d{2}\/\d{2})?\s*-\s*)/g,
+        "<br>$1"
+    );
+
+    return texto.replace(/^<br>/, "");
 }
 
 
