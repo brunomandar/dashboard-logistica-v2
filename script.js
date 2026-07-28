@@ -418,7 +418,23 @@ function carregarFiltrosProjetos() {
 
             const gerentes = [...new Set(projetosCache.map(p => p.Gerente).filter(Boolean))];
             const foruns = [...new Set(projetosCache.map(p => p.Forum).filter(Boolean))];
-            const status = [...new Set(projetosCache.map(p => p["Status Geral"]).filter(Boolean))];
+            const status = [
+    ...new Set(
+        projetosCache
+            .map(p => p["Status Geral"])
+            .filter(Boolean)
+            .filter(s => {
+                const valor = s
+                    .toString()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .trim()
+                    .toUpperCase();
+
+                return valor !== "DUPLICADO";
+            })
+    )
+];
 
             selGerente.innerHTML = '<option value="">Todos</option>';
             selForum.innerHTML = '<option value="">Todos</option>';
@@ -1032,6 +1048,16 @@ function carregarAcoes() {
     return textoLinha.includes(pesquisaNormalizada);
 };
 
+            const ehDuplicadoAcao = (item) => {
+    const statusGeral = normalizar(item["Status Geral"]);
+    const statusPrazo = normalizar(item.Status);
+
+    return (
+        statusGeral === "DUPLICADO" ||
+        statusPrazo === "DUPLICADO"
+    );
+}; 
+
             const ehSemAcao = (item) => {
                 const status = normalizar(item["Status Ação"]);
                 const acao = normalizar(item["Ações"]);
@@ -1056,7 +1082,7 @@ function carregarAcoes() {
                 return status;
             };
 
-            let dados = data.dados || [];
+            let dados = (data.dados || []).filter(i => !ehDuplicadoAcao(i));
 
             // Aplica filtro Status
             // Aplica filtro Status Geral da demanda
