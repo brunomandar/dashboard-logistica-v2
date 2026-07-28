@@ -487,6 +487,16 @@ const classePrioridade = (prioridade) => {
     return textoLinha.includes(pesquisaNormalizada);
 };
 
+const ehDuplicado = (item) => {
+    const statusGeral = normalizar(item["Status Geral"]);
+    const statusPrazo = normalizar(item.Status);
+
+    return (
+        statusGeral === "DUPLICADO" ||
+        statusPrazo === "DUPLICADO"
+    );
+};
+
 const ehCancelado = (item) => {
     const statusGeral = normalizar(item["Status Geral"]);
     const statusPrazo = normalizar(item.Status);
@@ -535,6 +545,7 @@ const obterJustificativaCancelamento = (item) => {
     };
 
     let projetos = projetosCache.filter(p => {
+    const okDuplicado = !ehDuplicado(p);
     const okGerente = !gerente || p.Gerente === gerente;
     const okForum = !forum || p.Forum === forum;
     const okStatus = !status || p["Status Geral"] === status;
