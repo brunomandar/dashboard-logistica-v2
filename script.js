@@ -454,9 +454,9 @@ function carregarDashboard() {
 const classePrioridade = (prioridade) => {
     const valor = normalizar(prioridade);
 
-    if (valor === "ALTA") return "alta";
-    if (valor === "MEDIA") return "media";
-    if (valor === "BAIXA") return "baixa";
+    if (valor === "P0") return "p0";
+    if (valor === "P1") return "p1";
+    if (valor === "P2") return "p2";
 
     return "";
 };
@@ -544,24 +544,47 @@ const obterJustificativaCancelamento = (item) => {
 });
 
     const total = projetos.length;
-    const atrasado = projetos.filter(p => normalizar(p.Status) === "ATRASADO").length;
-    const atencao = projetos.filter(p => normalizar(p.Status) === "ATENCAO").length;
-    const prazo = projetos.filter(p => normalizar(p.Status) === "NO PRAZO").length;
-    
-    const cancelado = projetos.filter(p => ehCancelado(p)).length;
-    const concluido = projetos.filter(p => ehConcluido(p)).length;
+const atrasado = projetos.filter(p => normalizar(p.Status) === "ATRASADO").length;
+const atencao = projetos.filter(p => normalizar(p.Status) === "ATENCAO").length;
+const prazo = projetos.filter(p => normalizar(p.Status) === "NO PRAZO").length;
 
+const cancelado = projetos.filter(p => ehCancelado(p)).length;
+const concluido = projetos.filter(p => ehConcluido(p)).length;
 
-    const prioridadeAlta = projetos.filter(p => normalizar(p.Prioridade) === "ALTA").length;
-    const prioridadeMedia = projetos.filter(p => normalizar(p.Prioridade) === "MEDIA").length;
-    const prioridadeBaixa = projetos.filter(p => normalizar(p.Prioridade) === "BAIXA").length;
+setTexto("total", total);
+setTexto("atrasado", atrasado);
+setTexto("atencao", atencao);
+setTexto("prazo", prazo);
+setTexto("cancelado", cancelado);
+setTexto("concluido", concluido);
 
-    setTexto("total", total);
-    setTexto("atrasado", atrasado);
-    setTexto("atencao", atencao);
-    setTexto("prazo", prazo);
-    setTexto("cancelado", cancelado);
-    setTexto("concluido", concluido);
+// =========================
+// BASE VISUAL FILTRADA PELO CARD
+// Esta lista será usada pelos gráficos e pela tabela
+// =========================
+
+let projetosVisual = [...projetos];
+
+if (filtroCardProjeto === "ATRASADO") {
+    projetosVisual = projetosVisual.filter(i => normalizar(i.Status) === "ATRASADO");
+
+} else if (filtroCardProjeto === "NO PRAZO") {
+    projetosVisual = projetosVisual.filter(i => normalizar(i.Status) === "NO PRAZO");
+
+} else if (filtroCardProjeto === "ATENÇÃO") {
+    projetosVisual = projetosVisual.filter(i => normalizar(i.Status) === "ATENCAO");
+
+} else if (filtroCardProjeto === "CANCELADO") {
+    projetosVisual = projetosVisual.filter(i => ehCancelado(i));
+
+} else if (filtroCardProjeto === "CONCLUIDO") {
+    projetosVisual = projetosVisual.filter(i => ehConcluido(i));
+}
+
+// Prioridades agora são calculadas com a base visual filtrada
+const prioridadeP0 = projetosVisual.filter(p => normalizar(p.Prioridade) === "P0").length;
+const prioridadeP1 = projetosVisual.filter(p => normalizar(p.Prioridade) === "P1").length;
+const prioridadeP2 = projetosVisual.filter(p => normalizar(p.Prioridade) === "P2").length;
 
 
     // =========================
@@ -575,17 +598,17 @@ const obterJustificativaCancelamento = (item) => {
             window.grafico.destroy();
         }
 
-        const totalPrioridades = prioridadeAlta + prioridadeMedia + prioridadeBaixa;
+        const totalPrioridades = prioridadeP0 + prioridadeP1 + prioridadeP2;
 
         window.grafico = new Chart(ctxPrioridade.getContext("2d"), {
             type: "doughnut",
             data: {
-                labels: ["Alta", "Média", "Baixa"],
+                labels: ["P0", "P1", "P2"],
                 datasets: [{
                     data: [
-                        prioridadeAlta,
-                        prioridadeMedia,
-                        prioridadeBaixa
+                        prioridadeP0,
+                        prioridadeP1,
+                        prioridadeP2
                     ],
                     backgroundColor: [
                         "#990000",
@@ -688,8 +711,8 @@ plugins: {
             window.grafico2.destroy();
         }
 
-        const gerentes = [...new Set(projetos.map(p => p.Gerente).filter(Boolean))];
-        const foruns = [...new Set(projetos.map(p => p.Forum).filter(Boolean))];
+        const gerentes = [...new Set(projetosVisual.map(p => p.Gerente).filter(Boolean))];
+        const foruns = [...new Set(projetosVisual.map(p => p.Forum).filter(Boolean))];
 
         const cores = [
             "#000000",
@@ -704,7 +727,7 @@ plugins: {
             return {
                 label: forumNome,
                 data: gerentes.map(gerenteNome =>
-                    projetos.filter(p => p.Gerente === gerenteNome && p.Forum === forumNome).length
+                    projetosVisual.filter(p => p.Gerente === gerenteNome && p.Forum === forumNome).length
                 ),
                 backgroundColor: cores[index % cores.length]
             };
@@ -846,20 +869,7 @@ scales: {
     // FILTRO POR CARD
     // =========================
 
-    let listaFiltrada = projetos;
-
-    if (filtroCardProjeto === "ATRASADO") {
-        listaFiltrada = listaFiltrada.filter(i => normalizar(i.Status) === "ATRASADO");
-    } else if (filtroCardProjeto === "NO PRAZO") {
-        listaFiltrada = listaFiltrada.filter(i => normalizar(i.Status) === "NO PRAZO");
-    } else if (filtroCardProjeto === "ATENÇÃO") {
-        listaFiltrada = listaFiltrada.filter(i => normalizar(i.Status) === "ATENCAO");
-    } else if (filtroCardProjeto === "CANCELADO") {
-    listaFiltrada = listaFiltrada.filter(i => ehCancelado(i));
-} else if (filtroCardProjeto === "CONCLUIDO") {
-    listaFiltrada = listaFiltrada.filter(i => ehConcluido(i));
-}
-     
+    let listaFiltrada = [...projetosVisual];     
 
     // =========================
     // TABELA

@@ -1873,17 +1873,17 @@ td{
 }
 
 /* Alta = vermelho */
-.bolinha-prioridade.alta{
+.bolinha-prioridade.p0{
     background: #d00000;
 }
 
 /* Média = amarelo */
-.bolinha-prioridade.media{
+.bolinha-prioridade.p1{
     background: #f2c200;
 }
 
 /* Baixa = verde */
-.bolinha-prioridade.baixa{
+.bolinha-prioridade.p2{
     background: #2e9e44;
 }
 
