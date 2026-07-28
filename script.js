@@ -191,6 +191,20 @@ function filtrarCardProjeto(tipo) {
     carregarDashboard();
 }
 
+function formatarDataBR(valor) {
+    if (!valor || valor === "-") return "-";
+
+    const data = new Date(valor);
+
+    if (isNaN(data)) {
+        return valor;
+    }
+
+    return data.toLocaleDateString("pt-BR", {
+        timeZone: "UTC"
+    });
+}
+
 function ordenarTabelaProjetos(coluna) {
     if (ordenacaoTabelaProjetos.coluna === coluna) {
         ordenacaoTabelaProjetos.direcao =
@@ -212,6 +226,20 @@ function aplicarOrdenacaoTabelaProjetos(lista) {
         if (coluna === "ID") {
             return (extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID)) * multiplicador;
         }
+
+        if (coluna === "Data Fim") {
+    const dataA = new Date(a["Data Fim"]);
+    const dataB = new Date(b["Data Fim"]);
+
+    const timeA = isNaN(dataA) ? 9999999999999 : dataA.getTime();
+    const timeB = isNaN(dataB) ? 9999999999999 : dataB.getTime();
+
+    if (timeA !== timeB) {
+        return (timeA - timeB) * multiplicador;
+    }
+
+        return extrairNumeroLog(a.ID) - extrairNumeroLog(b.ID);
+}
 
         let valorA = "";
         let valorB = "";
@@ -446,6 +474,7 @@ const classePrioridade = (prioridade) => {
         item.Forum,
         item["Status Geral"],
         item.Status,
+        item["Data Fim"],
         item.Prioridade,
         item["Ações"],
         item["Responsável"],
@@ -861,6 +890,7 @@ scales: {
 >
     ${item.Status ?? ""}
 </td>
+                <td>${formatarDataBR(item["Data Fim"])}</td>
                 <td>
                 <span class="prioridade-com-bolinha">
                     <span class="bolinha-prioridade ${classePrioridade(item.Prioridade)}"></span>

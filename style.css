@@ -2226,3 +2226,12 @@ td{
     vertical-align: middle;
     padding: 6px 8px;
 }
+
+/* Ajuste coluna Data Fim - Demandas */
+#tabelaProjetos th:nth-child(8),
+#tabelaProjetos td:nth-child(8){
+    width: 72px;
+    max-width: 72px;
+    white-space: nowrap;
+    text-align: center;
+}
