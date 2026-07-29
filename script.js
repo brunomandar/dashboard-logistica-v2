@@ -99,7 +99,7 @@ const pluginValoresGraficos = {
 const pluginTextoCentroRosca = {
     id: "textoCentroRosca",
 
-    afterDraw(chart, args, options) {
+    afterDatasetsDraw(chart, args, options) {
         if (!options || options.display === false) return;
         if (chart.config.type !== "doughnut") return;
 
@@ -614,118 +614,144 @@ const prioridadeP1 = projetosVisual.filter(p => normalizar(p.Prioridade) === "P1
 const prioridadeP2 = projetosVisual.filter(p => normalizar(p.Prioridade) === "P2").length;
 
 
-    // =========================
-    // GRÁFICO ROSCA
-    // =========================
+   // =========================
+// GRÁFICO ROSCA
+// =========================
 
-    const ctxPrioridade = document.getElementById("graficoPrioridade");
+const ctxPrioridade = document.getElementById("graficoPrioridade");
 
-    if (ctxPrioridade && typeof Chart !== "undefined") {
-        if (window.grafico) {
-            window.grafico.destroy();
-        }
+if (ctxPrioridade && typeof Chart !== "undefined") {
+    if (window.grafico) {
+        window.grafico.destroy();
+    }
 
-        const totalPrioridades = prioridadeP0 + prioridadeP1 + prioridadeP2;
+    const totalPrioridades = prioridadeP0 + prioridadeP1 + prioridadeP2;
 
-        window.grafico = new Chart(ctxPrioridade.getContext("2d"), {
-            type: "doughnut",
-            data: {
-                labels: ["P0", "P1", "P2"],
-                datasets: [{
-                    data: [
-                        prioridadeP0,
-                        prioridadeP1,
-                        prioridadeP2
-                    ],
-                    backgroundColor: [
-                        "#990000",
-                        "#ff3333",
-                        "#ffb3b3"
-                    ],
-                    borderColor: "#ffffff",
-                    borderWidth: 2
-                }]
+    window.grafico = new Chart(ctxPrioridade.getContext("2d"), {
+        type: "doughnut",
+        data: {
+            labels: ["P0", "P1", "P2"],
+            datasets: [{
+                data: [
+                    prioridadeP0,
+                    prioridadeP1,
+                    prioridadeP2
+                ],
+                backgroundColor: [
+                    "#990000",
+                    "#ff3333",
+                    "#ffb3b3"
+                ],
+                borderColor: "#ffffff",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "55%",
+
+            layout: {
+                padding: {
+                    top: 15,
+                    right: 25,
+                    bottom: 5,
+                    left: 25
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: "55%",
 
-                layout: {
-                    padding: {
-                        top: 15,
-                        right: 25,
-                        bottom: 5,
-                        left: 25
+            onClick: function(event, elements, chart) {
+                const total = chart.data.datasets[0].data.reduce((acc, valor) => acc + valor, 0);
+
+                if (!elements || elements.length === 0 || total === 0) {
+                    chart.options.plugins.textoCentroRosca.textoPrincipal = total === 0 ? "0%" : "100%";
+                    chart.options.plugins.textoCentroRosca.textoSecundario = "Total";
+                    chart.update();
+                    return;
+                }
+
+                const index = elements[0].index;
+                const label = chart.data.labels[index];
+                const value = chart.data.datasets[0].data[index];
+
+                const percentual = ((value / total) * 100)
+                    .toFixed(1)
+                    .replace(".", ",") + "%";
+
+                chart.options.plugins.textoCentroRosca.textoPrincipal = percentual;
+                chart.options.plugins.textoCentroRosca.textoSecundario = label;
+
+                chart.update();
+            },
+
+            plugins: {
+                textoCentroRosca: {
+                    display: true,
+                    textoPrincipal: totalPrioridades > 0 ? "100%" : "0%",
+                    textoSecundario: "Total",
+                    fontSize: 22,
+                    fontSizeSub: 10,
+                    color: "#333",
+                    colorSub: "#666"
+                },
+
+                valoresGraficos: {
+                    display: true,
+                    fontSize: 10,
+                    fontWeight: "bold",
+                    color: "#333",
+                    offset: 18
+                },
+
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: "rgba(0, 0, 0, 0.92)",
+                    titleColor: "#ffffff",
+                    bodyColor: "#ffffff",
+                    borderColor: "#ffffff",
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: true,
+                    titleFont: {
+                        size: 12,
+                        weight: "bold"
+                    },
+                    bodyFont: {
+                        size: 12,
+                        weight: "bold"
+                    },
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || "";
+                            const value = context.raw || 0;
+                            return `${label}: ${value}`;
+                        }
                     }
                 },
 
-                onClick: function(event, elements, chart) {
-    const total = chart.data.datasets[0].data.reduce((acc, valor) => acc + valor, 0);
+                legend: {
+                    position: "bottom",
+                    labels: {
+                        boxWidth: 10,
+                        padding: 8,
+                        font: {
+                            size: 10
+                        }
+                    }
+                },
 
-    if (!elements || elements.length === 0 || total === 0) {
-        chart.options.plugins.textoCentroRosca.textoPrincipal = total === 0 ? "0%" : "100%";
-        chart.options.plugins.textoCentroRosca.textoSecundario = "Total";
-        chart.update();
-        return;
-    }
-
-    const index = elements[0].index;
-    const label = chart.data.labels[index];
-    const value = chart.data.datasets[0].data[index];
-
-    const percentual = ((value / total) * 100)
-        .toFixed(1)
-        .replace(".", ",") + "%";
-
-    chart.options.plugins.textoCentroRosca.textoPrincipal = percentual;
-    chart.options.plugins.textoCentroRosca.textoSecundario = label;
-
-    chart.update();
-},
-
-plugins: {
-    textoCentroRosca: {
-        display: true,
-        textoPrincipal: totalPrioridades > 0 ? "100%" : "0%",
-        textoSecundario: "Total",
-        fontSize: 22,
-        fontSizeSub: 10,
-        color: "#333",
-        colorSub: "#666"
-    },
-
-    valoresGraficos: {
-        display: true,
-        fontSize: 10,
-        fontWeight: "bold",
-        color: "#333",
-        offset: 18
-    },
-
-    legend: {
-        position: "bottom",
-        labels: {
-            boxWidth: 10,
-            padding: 8,
-            font: {
-                size: 10
+                title: {
+                    display: true,
+                    text: "Prioridade das Demandas",
+                    font: {
+                        size: 14,
+                        weight: "bold"
+                    }
+                }
             }
         }
-    },
-
-    title: {
-        display: true,
-        text: "Prioridade das Demandas",
-        font: {
-            size: 14,
-            weight: "bold"
-        }
-    }
+    });
 }
-            }
-        });
-    }
 
     // =========================
     // GRÁFICO BARRAS

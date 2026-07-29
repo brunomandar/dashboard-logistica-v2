@@ -1075,7 +1075,7 @@ td{
     padding: 0 !important;
     overflow: visible !important;
 
-    transform: translateY(-28px)
+    transform: translate(5px, -28px);
 }
 
 /* Canvas do donut */
@@ -1152,10 +1152,10 @@ td{
 /* Título */
 .titulo-dashboard{
     text-align: center;
-    font-size: 40px;
+    font-size: 36px;
     font-weight: 500;
-    margin: 0 0 20px 0;
-    letter-spacing: 1px;
+    margin: 0 0 18px 0;
+    letter-spacing: 0px;
     white-space: nowrap;
 }
 
@@ -1193,8 +1193,8 @@ td{
 }
 
 .item-filtro select{
-    width: 130px;
-    height: 24px;
+    width: 170px;
+    height: 26px;
     border: 2px solid #1f3a5f;
     background: white;
     font-size: 14px;
@@ -1221,10 +1221,11 @@ td{
 .cards-demandas-vertical{
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 11px;
     width: 145px;
 
-    transform: translateY(-65px);
+    transform: translateY(-60px);
+    transform: translate(-25px, -65px) !important;
 }
 
 .card-demanda{
@@ -1276,7 +1277,7 @@ td{
     padding: 0 !important;
     overflow: visible !important;
 
-    transform: translateY(-15px);
+    transform: translate(-15px, -30px) !important;
 }
 
 #graficoGerenciaForum{
@@ -1421,6 +1422,8 @@ td{
 
     box-shadow: 0 4px 8px rgba(0,0,0,.28);
     cursor: pointer;
+
+    transform: translate(-50px, -0px) !important;
 }
 
 .card-acao h2{
@@ -1577,8 +1580,8 @@ td{
     justify-content: space-between;
     align-items: center;
 
-    width: 650px;
-    margin-left: 280px;
+    width: 740px;
+    margin-left: 250px;
 
     gap: 0;
     background: transparent;
@@ -1602,8 +1605,8 @@ td{
 }
 
 .tabela-container{
-    width: 890px;
-    max-width: 890px;
+    width: 980px;
+    max-width: 980px;
 
     margin: 0 auto;
 
@@ -1640,8 +1643,8 @@ td{
     justify-content: space-between;
     align-items: center;
 
-    width: 650px;
-    margin-left: 195px;
+    width: 750px;
+    margin-left: 135px;
 
     gap: 0;
     background: transparent;
@@ -1665,8 +1668,8 @@ td{
 }
 
 .tabela-acoes-layout{
-    width: 850px;
-    max-width: 850px;
+    width: 980px;
+    max-width: 980px;
 
     margin: -15px auto 0 auto;
 
@@ -2060,7 +2063,7 @@ td{
 
 .btn-limpar-pesquisa{
     height: 26px;
-    padding: 0 50px;
+    padding: 0 80px;
 
     margin-left: 40px;
 
@@ -2095,14 +2098,14 @@ td{
 
     gap: 8px;
 
-    transform: translateX(90px);
+    transform: translateX(80px);
 
     font-size: 14px;
     font-weight: 400;
 }
 
 .linha-pesquisa-acoes input{
-    width: 380px;
+    width: 440px;
     height: 26px;
 
     border: 2px solid #1f3a5f;
@@ -2122,7 +2125,7 @@ td{
     height: 26px;
     padding: 0 50px;
 
-    margin-left: 40px;
+    margin-left: 65px;
 
     border: 2px solid #1f3a5f;
     background: #e6e6e6;
