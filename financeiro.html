@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Financeiro</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js" defer></script>
+
+</head>
+
+<body>
+
+<div id="modalFinanceiroConstrucao" class="modal-financeiro-overlay">
+    <div class="modal-financeiro-box">
+        <h2>🚧 Aba em construção 🚧</h2>
+
+        <p>
+            Esta área do dashboard financeiro ainda está em desenvolvimento
+            e não está disponível para consulta.
+        </p>
+
+        <p class="modal-financeiro-pergunta">
+            Retorne à tela inicial.
+        </p>
+
+        <div class="modal-financeiro-botoes">
+            <button id="btnFinanceiroVoltar" class="btn-modal-nao">
+                Ok
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="conteudoFinanceiro" class="layout-dashboard" style="display: none;">
+
+    <!-- BARRA LATERAL -->
+    <div class="sidebar">
+
+        <div>
+
+            <div class="logo-claro">
+                <img src="imagens/claro_logo.png"  alt="Logo-claro">
+            </div>
+
+            <div class="texto-sidebar">
+                SUPORTE OPERACIONAL E<br>
+                MELHORIA CONTÍNUA
+            </div>
+
+            <button class="btn-lateral" onclick="history.back()">
+                VOLTAR
+            </button>
+
+            <button 
+                type="button"
+                class="btn-base-dados"
+                onclick="window.open('https://corpclarobr.sharepoint.com/:x:/r/sites/USER-_PortfoliodeprojetosLogsticos/Documentos%20Compartilhados/Base%20-%20Projetos%20Logistica%202026.xlsx?d=w71f8f9584b82455bbd00b91c7debe9de&csf=1&web=1&e=2z8OcF', '_blank')"
+            >
+                BASE DE DADOS
+            </button>
+
+            <button 
+                type="button"
+                class="btn-reuniao-estrategica"
+                onclick="window.open('https://corpclarobr.sharepoint.com/:p:/r/sites/USER-_PortfoliodeprojetosLogsticos/Documentos%20Compartilhados/Demanda%20Transporte%2020260622.pptx?d=w0ae054be2c3445e2b27e257a1b1d118d&csf=1&web=1&e=aP2vbe', '_blank')"
+            >
+                ONE PAGE - RE
+            </button>
+
+        </div>
+
+        <div class="icone-logistica">
+            <img src="imagens/caminhao.png"  alt="icone-logistica">
+        </div>
+
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="conteudo-dashboard">
+
+        <div class="dashboard-canvas" data-base-width="1050" data-base-height="600">
+
+            <div>
+                <div class="titulo-dashboard titulo-financeiro">
+                    DASHBOARD - FINANCEIRO
+                </div>
+            </div>
+
+            <div class="miolo-dashboard-financeiro">
+
+                <!-- FILTROS -->
+                <div class="container-topo-financeiro">
+
+                    <div class="linha-filtros-financeiro">
+
+                        <div class="item-filtro">
+                            <span>Gerente:</span>
+                            <select id="filtroGerenteFinanceiro">
+                                <option value="">Todos</option>
+                            </select>
+                        </div>
+
+                        <div class="item-filtro">
+                            <span>Tipo:</span>
+                            <select id="filtroTipoFinanceiro">
+                                <option value="">Todos</option>
+                                <option value="OPEX">OPEX</option>
+                                <option value="CAPEX">CAPEX</option>
+                            </select>
+                        </div>
+
+                        <div class="item-filtro">
+                            <span>Status:</span>
+                            <select id="filtroStatusFinanceiro">
+                                <option value="">Todos</option>
+                                <option value="NO PRAZO">NO PRAZO</option>
+                                <option value="ATENÇÃO">ATENÇÃO</option>
+                                <option value="ATRASADO">ATRASADO</option>
+                                <option value="CANCELADO">CANCELADO</option>
+                                <option value="CONCLUIDO">CONCLUIDO</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ÁREA PRINCIPAL -->
+                <div class="area-resumo-financeiro">
+
+                    <!-- CARDS ESQUERDA -->
+                    <div class="cards-financeiro-esquerda">
+
+                        <div class="card-financeiro">
+                            <h2>Meta</h2>
+                            <p>-- MM</p>
+                        </div>
+
+                        <div class="card-financeiro">
+                            <h2>Realizado</h2>
+                            <p>-- MM</p>
+                        </div>
+
+                        <div class="card-financeiro">
+                            <h2>Realizado + FCST</h2>
+                            <p>-- MM</p>
+                        </div>
+
+                        <div class="card-financeiro">
+                            <h2>% Atingido</h2>
+                            <p>--%</p>
+                        </div>
+
+                        <div class="card-financeiro">
+                            <h2>Saving Capturado</h2>
+                            <p>-- MM</p>
+                        </div>
+
+                    </div>
+
+                    <!-- GRÁFICO CENTRAL -->
+                    <div class="grafico-financeiro-box">
+
+                        <div class="titulo-grafico-financeiro">
+                            Meta x FCST
+                        </div>
+
+                        <div class="placeholder-grafico-financeiro">
+                            <span>Espaço reservado para gráfico financeiro</span>
+                        </div>
+
+                        <div class="legenda-financeiro">
+                            <span><i class="legenda-meta"></i> Meta</span>
+                            <span><i class="legenda-realizado"></i> Realizado + FCST</span>
+                        </div>
+
+                    </div>
+
+                    <!-- CARDS DIREITA -->
+                    <div class="cards-financeiro-direita">
+
+                        <div class="card-financeiro card-financeiro-status">
+                            <h2>Status</h2>    
+                            <p id="statusFinanceiro">ATRASADO</p>
+                        </div>
+
+                        <div class="card-financeiro card-financeiro-saldo">
+                            <h2>Saldo</h2>
+                            <p>--</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- PESQUISA -->
+                <div class="linha-pesquisa-financeiro">
+                    <span>Pesquisar:</span>
+
+                    <input 
+                        type="text" 
+                        id="pesquisaFinanceiro" 
+                        placeholder="Digite ID, demanda, gerente..."
+                    >
+
+                    <button class="btn-limpar-financeiro">
+                        Limpar
+                    </button>
+                </div>
+
+                <!-- TABELA -->
+                <div class="tabela-container tabela-financeiro-layout">
+
+                    <table id="tabelaFinanceiro">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Demanda</th>
+                                <th>Gerente</th>
+                                <th>Tipo</th>
+                                <th>Estágio</th>
+                                <th>Status</th>
+                                <th>Meta 2026</th>
+                                <th>Realizado + FCST 2026</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>LOG-01</td>
+                                <td>Espaço reservado</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>Reservado</td>
+                                <td>Reservado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("modalFinanceiroConstrucao");
+        const conteudo = document.getElementById("conteudoFinanceiro");
+        const btnVoltar = document.getElementById("btnFinanceiroVoltar");
+
+        const senhaFinanceiro = "LOG2026";
+
+        function liberarFinanceiro() {
+            if (modal) {
+                modal.style.display = "none";
+            }
+
+            if (conteudo) {
+                conteudo.style.display = "flex";
+            }
+
+            sessionStorage.setItem("financeiroLiberado", "sim");
+
+            requestAnimationFrame(function () {
+                if (typeof ajustarEscalaDashboard === "function") {
+                    ajustarEscalaDashboard();
+                    setTimeout(ajustarEscalaDashboard, 150);
+                }
+            });
+        }
+
+        if (sessionStorage.getItem("financeiroLiberado") === "sim") {
+            liberarFinanceiro();
+        }
+
+        if (btnVoltar) {
+            btnVoltar.addEventListener("click", function () {
+                window.location.href = "index.html";
+            });
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.ctrlKey && event.shiftKey && event.key.toUpperCase() === "F") {
+                const senhaDigitada = prompt("Informe a chave de acesso da aba Financeiro:");
+
+                if (senhaDigitada === senhaFinanceiro) {
+                    liberarFinanceiro();
+                } else if (senhaDigitada !== null) {
+                    alert("Chave de acesso inválida.");
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
