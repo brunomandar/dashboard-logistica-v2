@@ -2038,14 +2038,14 @@ td{
     gap: 15px;
 
     /* traz o conjunto um pouco para a esquerda */
-    transform: translateX(70px);
+    transform: translateX(75px);
 
     font-size: 14px;
     font-weight: 400;
 }
 
 .linha-pesquisa-demandas input{
-    width: 380px;
+    width: 430px;
     height: 26px;
 
     border: 2px solid #1f3a5f;
@@ -2063,9 +2063,9 @@ td{
 
 .btn-limpar-pesquisa{
     height: 26px;
-    padding: 0 80px;
+    padding: 0 50px;
 
-    margin-left: 40px;
+    margin-left: 60px;
 
     border: 2px solid #1f3a5f;
     background: #e6e6e6;
