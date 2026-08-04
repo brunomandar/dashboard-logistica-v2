@@ -457,6 +457,7 @@ function carregarDashboard() {
     const forum = document.getElementById("filtroForum")?.value || "";
     const status = document.getElementById("filtroStatus")?.value || "";
     const pesquisa = document.getElementById("pesquisaProjetos")?.value || "";
+    const somenteRE = document.getElementById("filtroRE")?.checked || false;
 
     const normalizar = (valor) => {
     return (valor || "")
@@ -492,6 +493,7 @@ const classePrioridade = (prioridade) => {
         item.Status,
         item["Data Fim"],
         item.Prioridade,
+        item.RE,
         item["Ações"],
         item["Responsável"],
         item["Status Ação"],
@@ -567,7 +569,9 @@ const obterJustificativaCancelamento = (item) => {
     const okStatus = !status || p["Status Geral"] === status;
     const okPesquisa = linhaContemPesquisa(p, pesquisa);
 
-    return okGerente && okForum && okStatus && okPesquisa;
+    const okRE = !somenteRE || normalizar(p.RE) === "S";
+
+    return okGerente && okForum && okStatus && okPesquisa && okRE;
 });
 
     const total = projetos.length;
@@ -1037,6 +1041,7 @@ function carregarAcoes() {
     const forum = document.getElementById("filtroForumAcoes")?.value || "";
     const statusFiltro = document.getElementById("filtroStatusAcoes")?.value || "";
     const pesquisaAcoes = document.getElementById("pesquisaAcoes")?.value || "";
+    const somenteREAcoes = document.getElementById("filtroREAcoes")?.checked || false;
 
     fetch(`https://dashboard-logistica-v2.onrender.com/acoes?gerente=${encodeURIComponent(gerente)}&forum=${encodeURIComponent(forum)}`)
         .then(res => res.json())
@@ -1066,7 +1071,8 @@ function carregarAcoes() {
         item["Ações"],
         item["Prazo da Ação"],
         item["Responsável"],
-        obterPMOResponsavel(item)
+        obterPMOResponsavel(item),
+        item.RE
     ]
         .map(valor => normalizar(valor))
         .join(" ");
@@ -1108,7 +1114,12 @@ function carregarAcoes() {
                 return status;
             };
 
-            let dados = (data.dados || []).filter(i => !ehDuplicadoAcao(i));
+            let dados = (data.dados || []).filter(i => {
+                const okDuplicado = !ehDuplicadoAcao(i);
+                const okRE = !somenteREAcoes || normalizar(i.RE) === "S";
+
+                return okDuplicado && okRE;
+});
 
             // Aplica filtro Status
             // Aplica filtro Status Geral da demanda

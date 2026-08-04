@@ -2035,10 +2035,10 @@ td{
     align-items: center;
 
     /* aumenta levemente a separação entre input e botão */
-    gap: 15px;
+    gap: 10px;
 
     /* traz o conjunto um pouco para a esquerda */
-    transform: translateX(75px);
+    transform: translateX(85px);
 
     font-size: 14px;
     font-weight: 400;
@@ -2061,11 +2061,32 @@ td{
     border-color: #DA291C;
 }
 
+.filtro-re-checkbox{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    margin-left: 18px;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+.filtro-re-checkbox input{
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
 .btn-limpar-pesquisa{
     height: 26px;
     padding: 0 50px;
 
-    margin-left: 60px;
+    margin-left: 20px;
 
     border: 2px solid #1f3a5f;
     background: #e6e6e6;
@@ -2098,13 +2119,13 @@ td{
 
     gap: 8px;
 
-    transform: translateX(80px);
+    transform: translateX(85px);
 
     font-size: 14px;
     font-weight: 400;
 }
 
-.linha-pesquisa-acoes input{
+.linha-pesquisa-acoes input[type="text"]{
     width: 440px;
     height: 26px;
 
@@ -2125,7 +2146,7 @@ td{
     height: 26px;
     padding: 0 50px;
 
-    margin-left: 65px;
+    margin-left: 15px;
 
     border: 2px solid #1f3a5f;
     background: #e6e6e6;
