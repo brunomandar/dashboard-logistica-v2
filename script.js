@@ -458,6 +458,7 @@ function carregarDashboard() {
     const status = document.getElementById("filtroStatus")?.value || "";
     const pesquisa = document.getElementById("pesquisaProjetos")?.value || "";
     const somenteRE = document.getElementById("filtroRE")?.checked || false;
+    const situacao = document.getElementById("filtroSituacao")?.value || "";
 
     const normalizar = (valor) => {
     return (valor || "")
@@ -535,6 +536,20 @@ const ehConcluido = (item) => {
     );
 };
 
+const ehDemandaAtiva = (item) => {
+    const statusPrazo = normalizar(item.Status);
+
+    return (
+        statusPrazo === "NO PRAZO" ||
+        statusPrazo === "ATENCAO" ||
+        statusPrazo === "ATRASADO"
+    );
+};
+
+const ehDemandaNaoAtiva = (item) => {
+    return ehCancelado(item) || ehConcluido(item);
+};
+
 const escaparAtributoHtml = (valor) => {
     return (valor || "")
         .toString()
@@ -568,10 +583,17 @@ const obterJustificativaCancelamento = (item) => {
     const okForum = !forum || p.Forum === forum;
     const okStatus = !status || p["Status Geral"] === status;
     const okPesquisa = linhaContemPesquisa(p, pesquisa);
-
     const okRE = !somenteRE || normalizar(p.RE) === "S";
 
-    return okGerente && okForum && okStatus && okPesquisa && okRE;
+    let okSituacao = true;
+
+    if (situacao === "ATIVAS") {
+        okSituacao = ehDemandaAtiva(p);
+    } else if (situacao === "NAO_ATIVAS") {
+        okSituacao = ehDemandaNaoAtiva(p);
+    }
+
+    return okDuplicado && okGerente && okForum && okStatus && okPesquisa && okRE && okSituacao;
 });
 
     const total = projetos.length;
@@ -1397,6 +1419,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("filtroGerente").addEventListener("change", carregarDashboard);
         document.getElementById("filtroForum").addEventListener("change", carregarDashboard);
         document.getElementById("filtroStatus").addEventListener("change", carregarDashboard);
+        document.getElementById("filtroSituacao")?.addEventListener("change", carregarDashboard);
     }
 
     // ✅ AÇÕES (Só roda se estiver na tela de ações)
