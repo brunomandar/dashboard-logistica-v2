@@ -2500,8 +2500,8 @@ td{
 
 /* PESQUISA FINANCEIRO */
 .linha-pesquisa-financeiro{
-    width: 850px;
-    max-width: 850px;
+    width: 980px;
+    max-width: 980px;
 
     margin: -8px auto 10px auto;
 
@@ -2509,9 +2509,9 @@ td{
     justify-content: center;
     align-items: center;
 
-    gap: 8px;
+    gap: 10px;
 
-    transform: translateX(70px);
+    transform: translateX(-15px);
 
     font-size: 14px;
     font-weight: 400;}
