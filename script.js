@@ -1478,6 +1478,38 @@ function ajustarEscalaDashboard() {
     canvas.style.setProperty("--dashboard-shift-x", "-35px");
 }
 
+function abrirAjudaDashboard() {
+    const overlay = document.getElementById("overlayAjudaDashboard");
+    const card = document.getElementById("cardAjudaDashboard");
+
+    if (overlay) overlay.style.display = "block";
+    if (card) card.style.display = "block";
+}
+
+function fecharAjudaDashboard() {
+    const overlay = document.getElementById("overlayAjudaDashboard");
+    const card = document.getElementById("cardAjudaDashboard");
+
+    if (overlay) overlay.style.display = "none";
+    if (card) card.style.display = "none";
+}
+
+function abrirAjudaAcoes() {
+    const overlay = document.getElementById("overlayAjudaAcoes");
+    const card = document.getElementById("cardAjudaAcoes");
+
+    if (overlay) overlay.style.display = "block";
+    if (card) card.style.display = "block";
+}
+
+function fecharAjudaAcoes() {
+    const overlay = document.getElementById("overlayAjudaAcoes");
+    const card = document.getElementById("cardAjudaAcoes");
+
+    if (overlay) overlay.style.display = "none";
+    if (card) card.style.display = "none";
+}
+
 window.addEventListener("resize", ajustarEscalaDashboard);
 window.addEventListener("load", ajustarEscalaDashboard);
 
