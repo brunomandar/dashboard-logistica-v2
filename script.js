@@ -181,7 +181,7 @@ if (typeof Chart !== "undefined") {
 
 function filtrarCardProjeto(tipo) {
 
-    // ✅ toggle (melhor UX)
+    // ✅ toggle (melhor UX-)
     if (filtroCardProjeto === tipo) {
         filtroCardProjeto = "";
     } else {
