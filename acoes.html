@@ -68,9 +68,55 @@
 
       <div class="dashboard-canvas" data-base-width="1050" data-base-height="600">
 
-        <div class="titulo-dashboard">
-            DASHBOARD - AÇÕES
-        </div>
+        <div class="topo-dashboard">
+    <div class="titulo-dashboard">
+        DASHBOARD - AÇÕES
+    </div>
+
+<div id="overlayAjudaAcoes" class="overlay-ajuda-dashboard" onclick="fecharAjudaAcoes()"></div>
+
+<div id="cardAjudaAcoes" class="card-ajuda-dashboard">
+    <div class="card-ajuda-header">
+        <h3>Ajuda do Dashboard - Ações</h3>
+        <button onclick="fecharAjudaAcoes()">×</button>
+    </div>
+
+    <div class="card-ajuda-conteudo">
+        
+        <h4>CARDS LATERAIS</h4>
+        <p><strong>Total:</strong> quantidade total de ações exibidas conforme os filtros aplicados.</p>
+        <p><strong>No Prazo:</strong> ações com prazo dentro do esperado.</p>
+        <p><strong>Atenção:</strong> ações próximas ao vencimento (vencimento em 7 dias).</p>
+        <p><strong>Atrasado:</strong> ações com prazo vencido.</p>
+        <p><strong>Sem Ação:</strong> demandas sem ação registrada ou sem plano de ação definido.</p>
+
+        <h4>FILTROS</h4>
+        <p><strong>Gerente:</strong> filtra as ações por gerente da demanda.</p>
+        <p><strong>Fórum:</strong> filtra as ações por fórum ou categoria.</p>
+        <p><strong>Status:</strong> filtra pelo status geral da demanda vinculada.</p>
+
+        <h4>GRÁFICO</h4>
+        <p>
+            O gráfico de status das ações mostra a distribuição das ações em No Prazo, Atenção, Atrasado e Sem Ação.
+        </p>
+
+        <h4>BARRA DE PESQUISA</h4>
+        <p>A barra de pesquisa trás o resultado de qualquer palavra filtrada na linha da demanda, levando em conta todas as colunas e refletindo os números em todos as partes do dashboard. Ao clicar no botão <strong>Limpar</strong> ele deixa a barra de pesquisa vazia novamente.</p>
+
+        <h4>RE - REUNIÃO ESTRATÉGICA</h4>
+        <p>Ao clicar na seleção RE, sera refletido no dashboard somente as demandas que são apresentadas na reunião estratégica com a diretoria de logística.</p>
+
+        <h4>TABELA</h4>
+        <p>
+            A tabela apresenta o detalhe de cada ação, incluindo projeto, status da ação, descrição da ação, prazo, responsável e PMO responsável.
+        </p>
+    </div>
+</div>
+
+    <button class="btn-ajuda-dashboard" onclick="abrirAjudaAcoes()" title="Ajuda da aba ações">
+        ?
+    </button>
+</div>
      
         <div class="miolo-dashboard-acoes">
 
