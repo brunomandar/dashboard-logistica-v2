@@ -2723,6 +2723,13 @@ td{
     transform: scale(1.03);
 }
 
+.topo-dashboard {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .btn-ajuda-dashboard {
     position: absolute;
     right: 10px;
