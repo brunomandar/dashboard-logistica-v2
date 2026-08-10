@@ -179,6 +179,15 @@ if (typeof Chart !== "undefined") {
     Chart.register(pluginValoresGraficos, pluginTextoCentroRosca, pluginTotalPorGerente);
 }
 
+function obterCoordenador(item) {
+    return (
+        item["Coordenador"] ??
+        item["coordenador"] ??
+        item["COORDENADOR"] ??
+        ""
+    );
+}
+
 function filtrarCardProjeto(tipo) {
 
     // ✅ toggle (melhor UX-)
@@ -252,6 +261,11 @@ function aplicarOrdenacaoTabelaProjetos(lista) {
         else if (coluna === "Gerente") {
             valorA = a.Gerente || "";
             valorB = b.Gerente || "";
+        }
+
+        else if (coluna === "Coordenador") {
+            valorA = obterCoordenador(a);
+            valorB = obterCoordenador(b);
         }
 
         else if (coluna === "PMO Responsável") {
@@ -374,9 +388,9 @@ function aplicarOrdenacaoTabelaAcoes(lista) {
             valorB = b["Ações"] || "";
         }
 
-        else if (coluna === "Responsável") {
-            valorA = a["Responsável"] || "";
-            valorB = b["Responsável"] || "";
+        else if (coluna === "Coordenador") {
+            valorA = obterCoordenador(a);
+            valorB = obterCoordenador(b);
         }
 
         else if (coluna === "PMO Responsável") {
@@ -488,6 +502,7 @@ const classePrioridade = (prioridade) => {
         item.ID,
         item.Projeto,
         item.Gerente,
+        obterCoordenador(item),
         obterPMOResponsavel(item),
         item.Forum,
         item["Status Geral"],
@@ -964,6 +979,7 @@ scales: {
                 <td>${item.ID ?? ""}</td>
                 <td>${item.Projeto ?? ""}</td>
                 <td>${item.Gerente ?? ""}</td>
+                <td>${obterCoordenador(item)}</td>
                 <td>${obterPMOResponsavel(item)}</td>
                 <td>${item.Forum ?? ""}</td>
                 <td
@@ -1093,7 +1109,7 @@ function carregarAcoes() {
         item["Ações"],
         item["Prazo da Ação"],
         item["Responsável"],
-        obterPMOResponsavel(item),
+        obterCoordenador(item),
         item.RE
     ]
         .map(valor => normalizar(valor))
@@ -1354,7 +1370,7 @@ scales: {
                             <td>${item["Status Ação"] ?? ""}</td>
                             <td class="celula-texto-acoes">${formatarTextoAcoes(item["Ações"])}</td>
                             <td>${dataFormatada}</td>
-                            <td>${item["Responsável"] ?? ""}</td>
+                            <td>${obterCoordenador(item)}</td>
                             <td>${obterPMOResponsavel(item)}</td>
                         </tr>
                     `;

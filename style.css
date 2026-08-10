@@ -2262,8 +2262,8 @@ td{
 }
 
 /* Ajuste coluna Data Fim - Demandas */
-#tabelaProjetos th:nth-child(8),
-#tabelaProjetos td:nth-child(8){
+#tabelaProjetos th:nth-child(9),
+#tabelaProjetos td:nth-child(9){
     width: 72px;
     max-width: 72px;
     white-space: nowrap;
