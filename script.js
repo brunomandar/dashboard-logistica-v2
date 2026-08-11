@@ -493,10 +493,73 @@ const classePrioridade = (prioridade) => {
     return "";
 };
 
-   const linhaContemPesquisa = (item, termo) => {
-    const pesquisaNormalizada = normalizar(termo);
+   const obterCampoPesquisaProjetos = (item, campo) => {
+    const campoNormalizado = normalizar(campo);
 
-    if (!pesquisaNormalizada) return true;
+    if (campoNormalizado === "ID") {
+        return item.ID;
+    }
+
+    if (
+        campoNormalizado === "PROJETO" ||
+        campoNormalizado === "DEMANDA" ||
+        campoNormalizado === "DEMANDAS"
+    ) {
+        return item.Projeto;
+    }
+
+    if (campoNormalizado === "GERENTE") {
+        return item.Gerente;
+    }
+
+    if (campoNormalizado === "COORDENADOR") {
+        return obterCoordenador(item);
+    }
+
+    if (
+        campoNormalizado === "PMO" ||
+        campoNormalizado === "PMO RESPONSAVEL" ||
+        campoNormalizado === "PMO RESPONSÁVEL"
+    ) {
+        return obterPMOResponsavel(item);
+    }
+
+    if (
+        campoNormalizado === "FORUM" ||
+        campoNormalizado === "FÓRUM"
+    ) {
+        return item.Forum;
+    }
+
+    if (
+        campoNormalizado === "STATUS GERAL" ||
+        campoNormalizado === "STATUSGERAL"
+    ) {
+        return item["Status Geral"];
+    }
+
+    if (campoNormalizado === "STATUS") {
+        return item.Status;
+    }
+
+    if (campoNormalizado === "PRIORIDADE") {
+        return item.Prioridade;
+    }
+
+    if (campoNormalizado === "RE") {
+        return item.RE;
+    }
+
+    return "";
+};
+
+const linhaContemPesquisa = (item, termo) => {
+    if (!termo || !termo.trim()) return true;
+
+    const partes = termo
+        .split(";")
+        .map(p => p.trim())
+        .filter(Boolean);
 
     const textoLinha = [
         item.ID,
@@ -518,7 +581,26 @@ const classePrioridade = (prioridade) => {
         .map(valor => normalizar(valor))
         .join(" ");
 
-    return textoLinha.includes(pesquisaNormalizada);
+    return partes.every(parte => {
+        if (parte.includes("=")) {
+            const [campo, ...resto] = parte.split("=");
+            const valorBuscado = resto.join("=").trim();
+
+            if (!campo || !valorBuscado) return true;
+
+            const valorCampo = normalizar(obterCampoPesquisaProjetos(item, campo));
+            const valorFiltro = normalizar(valorBuscado);
+
+            return valorCampo.includes(valorFiltro);
+        }
+
+        const palavras = normalizar(parte)
+            .split(" ")
+            .map(p => p.trim())
+            .filter(Boolean);
+
+        return palavras.every(palavra => textoLinha.includes(palavra));
+    });
 };
 
 const ehDuplicado = (item) => {
@@ -1094,10 +1176,92 @@ function carregarAcoes() {
                     .toUpperCase();
             };
 
-            const linhaContemPesquisaAcoes = (item, termo) => {
-    const pesquisaNormalizada = normalizar(termo);
+            const obterCampoPesquisaAcoes = (item, campo) => {
+    const campoNormalizado = normalizar(campo);
 
-    if (!pesquisaNormalizada) return true;
+    if (campoNormalizado === "ID") {
+        return item.ID;
+    }
+
+    if (
+        campoNormalizado === "PROJETO" ||
+        campoNormalizado === "DEMANDA" ||
+        campoNormalizado === "DEMANDAS"
+    ) {
+        return item.Projeto;
+    }
+
+    if (campoNormalizado === "GERENTE") {
+        return item.Gerente;
+    }
+
+    if (
+        campoNormalizado === "FORUM" ||
+        campoNormalizado === "FÓRUM"
+    ) {
+        return item.Forum;
+    }
+
+    if (
+        campoNormalizado === "STATUS GERAL" ||
+        campoNormalizado === "STATUSGERAL"
+    ) {
+        return item["Status Geral"];
+    }
+
+    if (
+        campoNormalizado === "STATUS" ||
+        campoNormalizado === "STATUS ACAO" ||
+        campoNormalizado === "STATUS AÇÃO"
+    ) {
+        return item["Status Ação"];
+    }
+
+    if (
+        campoNormalizado === "ACAO" ||
+        campoNormalizado === "AÇÃO" ||
+        campoNormalizado === "ACOES" ||
+        campoNormalizado === "AÇÕES"
+    ) {
+        return item["Ações"];
+    }
+
+    if (
+        campoNormalizado === "PRAZO" ||
+        campoNormalizado === "PRAZO ACAO" ||
+        campoNormalizado === "PRAZO AÇÃO" ||
+        campoNormalizado === "PRAZO DA ACAO" ||
+        campoNormalizado === "PRAZO DA AÇÃO"
+    ) {
+        return item["Prazo da Ação"];
+    }
+
+    if (campoNormalizado === "COORDENADOR") {
+        return obterCoordenador(item);
+    }
+
+    if (
+        campoNormalizado === "PMO" ||
+        campoNormalizado === "PMO RESPONSAVEL" ||
+        campoNormalizado === "PMO RESPONSÁVEL"
+    ) {
+        return obterPMOResponsavel(item);
+    }
+
+    if (campoNormalizado === "RE") {
+        return item.RE;
+    }
+
+    return "";
+};
+
+const linhaContemPesquisaAcoes = (item, termo) => {
+    if (!termo || !termo.trim()) return true;
+
+    const partes = termo
+        .split(";")
+        .map(p => p.trim())
+        .filter(Boolean);
 
     const textoLinha = [
         item.ID,
@@ -1108,14 +1272,33 @@ function carregarAcoes() {
         item["Status Ação"],
         item["Ações"],
         item["Prazo da Ação"],
-        item["Responsável"],
         obterCoordenador(item),
+        obterPMOResponsavel(item),
         item.RE
     ]
         .map(valor => normalizar(valor))
         .join(" ");
 
-    return textoLinha.includes(pesquisaNormalizada);
+    return partes.every(parte => {
+        if (parte.includes("=")) {
+            const [campo, ...resto] = parte.split("=");
+            const valorBuscado = resto.join("=").trim();
+
+            if (!campo || !valorBuscado) return true;
+
+            const valorCampo = normalizar(obterCampoPesquisaAcoes(item, campo));
+            const valorFiltro = normalizar(valorBuscado);
+
+            return valorCampo.includes(valorFiltro);
+        }
+
+        const palavras = normalizar(parte)
+            .split(" ")
+            .map(p => p.trim())
+            .filter(Boolean);
+
+        return palavras.every(palavra => textoLinha.includes(palavra));
+    });
 };
 
             const ehDuplicadoAcao = (item) => {
@@ -1422,6 +1605,351 @@ function formatarTextoAcoes(valor) {
     return texto.replace(/^<br>/, "");
 }
 
+let financeiroCache = [];
+
+const API_FINANCEIRO = "https://dashboard-logistica-v2.onrender.com/financeiro";
+
+function normalizarFinanceiro(valor) {
+    return (valor || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toUpperCase();
+}
+
+function formatarNumeroFinanceiro(valor) {
+    const numero = Number(valor);
+
+    if (valor === null || valor === undefined || valor === "" || isNaN(numero)) {
+        return "--";
+    }
+
+    return numero.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function formatarDataFinanceiro(valor) {
+    if (!valor || valor === "-") return "-";
+
+    if (typeof valor === "number") {
+        const baseExcel = new Date(Date.UTC(1899, 11, 30));
+        const data = new Date(baseExcel.getTime() + valor * 86400000);
+
+        return data.toLocaleDateString("pt-BR", {
+            month: "short",
+            year: "2-digit",
+            timeZone: "UTC"
+        });
+    }
+
+    const data = new Date(valor);
+
+    if (!isNaN(data)) {
+        return data.toLocaleDateString("pt-BR", {
+            month: "short",
+            year: "2-digit"
+        });
+    }
+
+    return valor;
+}
+
+function obterValorFinanceiro(item, campo) {
+    return item[campo] ?? "";
+}
+
+function obterVersaoFCSTFinanceiro(item) {
+    return (
+        item["Versão FCST"] ??
+        item["Versao FCST"] ??
+        item["FCST"] ??
+        item["Versao_FCST"] ??
+        ""
+    );
+}
+
+function calcularSomaFinanceira(lista, campo) {
+    return lista.reduce((total, item) => {
+        const valor = Number(item[campo]);
+
+        if (isNaN(valor)) {
+            return total;
+        }
+
+        return total + valor;
+    }, 0);
+}
+
+function preencherSelectFinanceiro(id, valores) {
+    const select = document.getElementById(id);
+
+    if (!select) return;
+
+    const valorAtual = select.value;
+
+    select.innerHTML = '<option value="">Todos</option>';
+
+    valores
+        .filter(Boolean)
+        .sort((a, b) => a.toString().localeCompare(b.toString(), "pt-BR"))
+        .forEach(valor => {
+            select.add(new Option(valor, valor));
+        });
+
+    select.value = valorAtual;
+}
+
+function carregarFiltrosFinanceiro() {
+    fetch(API_FINANCEIRO)
+        .then(res => res.json())
+        .then(data => {
+            financeiroCache = Array.isArray(data) ? data : (data.dados || []);
+
+            const gerentes = [
+                ...new Set(financeiroCache.map(item => item.Gerente).filter(Boolean))
+            ];
+
+            preencherSelectFinanceiro("filtroGerenteFinanceiro", gerentes);
+
+            carregarFinanceiro();
+        })
+        .catch(err => console.error("Erro ao carregar financeiro:", err));
+}
+
+function obterCampoPesquisaFinanceiro(item, campo) {
+    const campoNormalizado = normalizarFinanceiro(campo);
+
+    if (campoNormalizado === "ID" || campoNormalizado === "ID FIN") {
+        return item.ID || item["ID FIN"];
+    }
+
+    if (
+        campoNormalizado === "PROJETO" ||
+        campoNormalizado === "DEMANDA" ||
+        campoNormalizado === "DEMANDAS"
+    ) {
+        return item.Projeto;
+    }
+
+    if (campoNormalizado === "GERENTE") {
+        return item.Gerente;
+    }
+
+    if (
+        campoNormalizado === "TIPO" ||
+        campoNormalizado === "TIPO ORCAMENTO" ||
+        campoNormalizado === "TIPO ORÇAMENTO"
+    ) {
+        return item.Tipo || item["Tipo Orçamento"];
+    }
+
+    if (campoNormalizado === "STAGE" || campoNormalizado === "ESTAGIO" || campoNormalizado === "ESTÁGIO") {
+        return item.Stage;
+    }
+
+    if (campoNormalizado === "STATUS") {
+        return item.Status || item["Status Geral"];
+    }
+
+    if (
+        campoNormalizado === "GESTOR"
+    ) {
+        return item.Gestor;
+    }
+
+    if (
+        campoNormalizado === "AREA" ||
+        campoNormalizado === "ÁREA"
+    ) {
+        return item.Area;
+    }
+
+    if (
+        campoNormalizado === "FORUM" ||
+        campoNormalizado === "FÓRUM"
+    ) {
+        return item.Forum || item["Forum Fin"];
+    }
+
+    if (
+        campoNormalizado === "META"
+    ) {
+        return item["Meta 2026"];
+    }
+
+    if (
+        campoNormalizado === "FCST"
+    ) {
+        return item["FCST 2026"];
+    }
+
+    if (
+        campoNormalizado === "REALIZADO" ||
+        campoNormalizado === "REAL FCST" ||
+        campoNormalizado === "REALIZADO FCST"
+    ) {
+        return item["Realizado + FCST 2026"];
+    }
+
+    if (
+        campoNormalizado === "SALDO"
+    ) {
+        return item["Saldo contra FCST"];
+    }
+
+    return "";
+}
+
+function linhaContemPesquisaFinanceiro(item, termo) {
+    if (!termo || !termo.trim()) return true;
+
+    const partes = termo
+        .split(";")
+        .map(p => p.trim())
+        .filter(Boolean);
+
+    const textoLinha = [
+        item.ID,
+        item["ID FIN"],
+        item.Projeto,
+        item.Gerente,
+        item.Tipo,
+        item["Tipo Orçamento"],
+        item.Stage,
+        item.Status,
+        item["Status Geral"],
+        item["Meta 2026"],
+        item["FCST 2026"],
+        item["Realizado + FCST 2026"],
+        item["Saldo contra FCST"]
+    ]
+        .map(valor => normalizarFinanceiro(valor))
+        .join(" ");
+
+    return partes.every(parte => {
+        if (parte.includes("=")) {
+            const [campo, ...resto] = parte.split("=");
+            const valorBuscado = resto.join("=").trim();
+
+            if (!campo || !valorBuscado) return true;
+
+            const valorCampo = normalizarFinanceiro(obterCampoPesquisaFinanceiro(item, campo));
+            const valorFiltro = normalizarFinanceiro(valorBuscado);
+
+            return valorCampo.includes(valorFiltro);
+        }
+
+        const palavras = normalizarFinanceiro(parte)
+            .split(" ")
+            .map(p => p.trim())
+            .filter(Boolean);
+
+        return palavras.every(palavra => textoLinha.includes(palavra));
+    });
+}
+
+function aplicarFiltrosFinanceiro(lista) {
+    const gerente = document.getElementById("filtroGerenteFinanceiro")?.value || "";
+    const tipo = document.getElementById("filtroTipoFinanceiro")?.value || "";
+    const status = document.getElementById("filtroStatusFinanceiro")?.value || "";
+    const fcst = document.getElementById("filtroFCSTFinanceiro")?.value || "";
+    const pesquisa = document.getElementById("pesquisaFinanceiro")?.value || "";
+
+    let dados = [...lista];
+
+    if (gerente) {
+        dados = dados.filter(item => item.Gerente === gerente);
+    }
+
+    if (tipo) {
+        dados = dados.filter(item =>
+            item.Tipo === tipo ||
+            item["Tipo Orçamento"] === tipo
+        );
+    }
+
+    if (status) {
+        const statusNormalizado = normalizarFinanceiro(status);
+
+        dados = dados.filter(item =>
+            normalizarFinanceiro(item.Status) === statusNormalizado ||
+            normalizarFinanceiro(item["Status Geral"]) === statusNormalizado
+        );
+    }
+
+    if (fcst) {
+        const existeCampoVersaoFCST = dados.some(item => obterVersaoFCSTFinanceiro(item));
+
+        if (existeCampoVersaoFCST) {
+            dados = dados.filter(item => obterVersaoFCSTFinanceiro(item) === fcst);
+        }
+    }
+
+    if (pesquisa) {
+        dados = dados.filter(item => linhaContemPesquisaFinanceiro(item, pesquisa));
+    }
+
+    return dados;
+}
+
+function carregarFinanceiro() {
+    const dadosFiltrados = aplicarFiltrosFinanceiro(financeiroCache);
+
+    const metaTotal = calcularSomaFinanceira(dadosFiltrados, "Meta 2026");
+    const fcstTotal = calcularSomaFinanceira(dadosFiltrados, "FCST 2026");
+    const realizadoFCSTTotal = calcularSomaFinanceira(dadosFiltrados, "Realizado + FCST 2026");
+    const saldoTotal = calcularSomaFinanceira(dadosFiltrados, "Saldo contra FCST");
+
+    const savingTotal = calcularSomaFinanceira(dadosFiltrados, "Saving Capturado");
+
+    const setTexto = (id, valor) => {
+        const elemento = document.getElementById(id);
+
+        if (elemento) {
+            elemento.innerText = valor;
+        }
+    };
+
+    setTexto("metaFinanceiro", formatarNumeroFinanceiro(metaTotal));
+    setTexto("fcstFinanceiro", formatarNumeroFinanceiro(fcstTotal));
+    setTexto("realizadoFCSTFinanceiro", formatarNumeroFinanceiro(realizadoFCSTTotal));
+    setTexto("saldoFinanceiro", formatarNumeroFinanceiro(saldoTotal));
+
+    if (savingTotal) {
+        setTexto("savingFinanceiro", formatarNumeroFinanceiro(savingTotal));
+    } else {
+        setTexto("savingFinanceiro", "--");
+    }
+
+    const statusFinanceiro = document.getElementById("statusFinanceiro");
+
+    if (statusFinanceiro) {
+        statusFinanceiro.innerText = saldoTotal >= 0 ? "NO PRAZO" : "ATRASADO";
+    }
+
+    const tabela = document.querySelector("#tabelaFinanceiro tbody");
+
+    if (tabela) {
+        tabela.innerHTML = dadosFiltrados.map(item => `
+            <tr>
+                <td>${item.ID ?? item["ID FIN"] ?? ""}</td>
+                <td>${item.Projeto ?? ""}</td>
+                <td>${item.Gerente ?? ""}</td>
+                <td>${item.Tipo ?? item["Tipo Orçamento"] ?? ""}</td>
+                <td>${item.Stage ?? ""}</td>
+                <td>${item.Status ?? item["Status Geral"] ?? ""}</td>
+                <td>${formatarNumeroFinanceiro(item["Meta 2026"])}</td>
+                <td>${formatarNumeroFinanceiro(item["FCST 2026"])}</td>
+                <td>${formatarNumeroFinanceiro(item["Realizado + FCST 2026"])}</td>
+                <td>${formatarNumeroFinanceiro(item["Saldo contra FCST"])}</td>
+            </tr>
+        `).join("");
+    }
+}
+
 
 // =============================
 // ✅ EVENTOS + LOAD
@@ -1448,6 +1976,28 @@ document.addEventListener("DOMContentLoaded", function () {
     if (document.getElementById("filtroStatusAcoes")) {
         document.getElementById("filtroStatusAcoes").addEventListener("change", carregarAcoes);
     }
+}
+
+// ✅ FINANCEIRO
+if (document.getElementById("filtroGerenteFinanceiro")) {
+    carregarFiltrosFinanceiro();
+
+    document.getElementById("filtroGerenteFinanceiro")?.addEventListener("change", carregarFinanceiro);
+    document.getElementById("filtroTipoFinanceiro")?.addEventListener("change", carregarFinanceiro);
+    document.getElementById("filtroStatusFinanceiro")?.addEventListener("change", carregarFinanceiro);
+    document.getElementById("filtroFCSTFinanceiro")?.addEventListener("change", carregarFinanceiro);
+
+    document.getElementById("pesquisaFinanceiro")?.addEventListener("input", carregarFinanceiro);
+
+    document.querySelector(".btn-limpar-financeiro")?.addEventListener("click", function () {
+        const pesquisa = document.getElementById("pesquisaFinanceiro");
+
+        if (pesquisa) {
+            pesquisa.value = "";
+        }
+
+        carregarFinanceiro();
+    });
 }
 
 ajustarEscalaDashboard();
