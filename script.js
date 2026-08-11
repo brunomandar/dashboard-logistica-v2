@@ -1903,8 +1903,6 @@ function carregarFinanceiro() {
     const realizadoFCSTTotal = calcularSomaFinanceira(dadosFiltrados, "Realizado + FCST 2026");
     const saldoTotal = calcularSomaFinanceira(dadosFiltrados, "Saldo contra FCST");
 
-    const savingTotal = calcularSomaFinanceira(dadosFiltrados, "Saving Capturado");
-
     const setTexto = (id, valor) => {
         const elemento = document.getElementById(id);
 
@@ -1918,11 +1916,7 @@ function carregarFinanceiro() {
     setTexto("realizadoFCSTFinanceiro", formatarNumeroFinanceiro(realizadoFCSTTotal));
     setTexto("saldoFinanceiro", formatarNumeroFinanceiro(saldoTotal));
 
-    if (savingTotal) {
-        setTexto("savingFinanceiro", formatarNumeroFinanceiro(savingTotal));
-    } else {
-        setTexto("savingFinanceiro", "--");
-    }
+    renderizarGraficoFinanceiro(dadosFiltrados);
 
     const statusFinanceiro = document.getElementById("statusFinanceiro");
 
@@ -1932,24 +1926,266 @@ function carregarFinanceiro() {
 
     const tabela = document.querySelector("#tabelaFinanceiro tbody");
 
-    if (tabela) {
-        tabela.innerHTML = dadosFiltrados.map(item => `
+if (tabela) {
+    if (dadosFiltrados.length === 0) {
+        tabela.innerHTML = `
             <tr>
-                <td>${item.ID ?? item["ID FIN"] ?? ""}</td>
-                <td>${item.Projeto ?? ""}</td>
-                <td>${item.Gerente ?? ""}</td>
-                <td>${item.Tipo ?? item["Tipo Orçamento"] ?? ""}</td>
-                <td>${item.Stage ?? ""}</td>
-                <td>${item.Status ?? item["Status Geral"] ?? ""}</td>
-                <td>${formatarNumeroFinanceiro(item["Meta 2026"])}</td>
-                <td>${formatarNumeroFinanceiro(item["FCST 2026"])}</td>
-                <td>${formatarNumeroFinanceiro(item["Realizado + FCST 2026"])}</td>
-                <td>${formatarNumeroFinanceiro(item["Saldo contra FCST"])}</td>
+                <td colspan="13">Nenhum registro financeiro encontrado.</td>
             </tr>
-        `).join("");
+        `;
+        return;
     }
+
+    tabela.innerHTML = dadosFiltrados.map(item => {
+        const id = item.ID ?? item["ID FIN"] ?? "";
+        const demanda = item.Projeto ?? item.Demanda ?? item["Projeto"] ?? "";
+        const gerente = item.Gerente ?? "";
+        const tipo = item["Tipo Orçamento"] ?? item.Tipo ?? "";
+        const stage = item.Stage ?? "";
+        const status = item.Status ?? item["Status Geral"] ?? "";
+
+        const dtInicio =
+            item["Dt Inicio Captura"] ??
+            item["Dt Início Captura"] ??
+            item["Dt Inicio"] ??
+            item["Dt Início"] ??
+            item["Início Captura"] ??
+            item["Inicio Captura"] ??
+            "";
+
+        const dtFim =
+            item["Dt Fim Captura"] ??
+            item["Dt Fim"] ??
+            item["Fim Captura"] ??
+            "";
+
+        const meta = item["Meta 2026"];
+        const fcst = item["FCST 2026"];
+        const realizadoFcst = item["Realizado + FCST 2026"];
+        const saldoFcst = item["Saldo contra FCST"];
+        const plano = item["Plano de Ação/Recuperação"] ?? "";
+
+        return `
+            <tr>
+                <td>${id}</td>
+                <td>${demanda}</td>
+                <td>${gerente}</td>
+                <td>${tipo}</td>
+                <td>${stage}</td>
+                <td>${status}</td>
+                <td>${formatarDataFinanceiro(dtInicio)}</td>
+                <td>${formatarDataFinanceiro(dtFim)}</td>
+                <td>${formatarNumeroFinanceiro(meta)}</td>
+                <td>${formatarNumeroFinanceiro(fcst)}</td>
+                <td>${formatarNumeroFinanceiro(realizadoFcst)}</td>
+                <td>${formatarNumeroFinanceiro(saldoFcst)}</td>
+                <td>${plano}</td>
+            </tr>
+        `;
+    }).join("");
+}
 }
 
+function agruparFinanceiroPorStage(lista) {
+    const grupos = {};
+
+    const arredondar = (valor) => {
+        const numero = Number(valor || 0);
+
+        if (isNaN(numero)) {
+            return 0;
+        }
+
+        return Math.round(numero * 100) / 100;
+    };
+
+    lista.forEach(item => {
+        const stage = item.Stage || "Sem Stage";
+
+        if (!grupos[stage]) {
+            grupos[stage] = {
+                stage: stage,
+                meta: 0,
+                realizadoFcst: 0,
+                saldoFcst: 0
+            };
+        }
+
+        grupos[stage].meta += Number(item["Meta 2026"] || 0);
+        grupos[stage].realizadoFcst += Number(item["Realizado + FCST 2026"] || 0);
+        grupos[stage].saldoFcst += Number(item["Saldo contra FCST"] || 0);
+    });
+
+    return Object.values(grupos)
+        .map(item => {
+            return {
+                stage: item.stage,
+                meta: arredondar(item.meta),
+                realizadoFcst: arredondar(item.realizadoFcst),
+                saldoFcst: arredondar(item.saldoFcst)
+            };
+        })
+        .sort((a, b) => {
+            return a.stage.toString().localeCompare(b.stage.toString(), "pt-BR", {
+                numeric: true,
+                sensitivity: "base"
+            });
+        });
+}
+
+function renderizarGraficoFinanceiro(lista) {
+    const canvas = document.getElementById("graficoFinanceiro");
+
+    if (!canvas || typeof Chart === "undefined") return;
+
+    const dadosAgrupados = agruparFinanceiroPorStage(lista);
+
+    const labels = dadosAgrupados.map(item => item.stage);
+    const metas = dadosAgrupados.map(item => item.meta);
+    const realizados = dadosAgrupados.map(item => item.realizadoFcst);
+
+    const formatarValorGrafico = (valor) => {
+        const numero = Number(valor || 0);
+
+        if (isNaN(numero)) {
+            return "0,00";
+        }
+
+        return numero.toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    };
+
+    if (window.graficoFinanceiro instanceof Chart) {
+        window.graficoFinanceiro.destroy();
+    }
+
+    window.graficoFinanceiro = new Chart(canvas.getContext("2d"), {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Meta",
+                    data: metas,
+                    backgroundColor: "#1f5f7a",
+                    borderColor: "#1f5f7a",
+                    borderWidth: 1,
+                    borderRadius: 3,
+                    barPercentage: 0.75,
+                    categoryPercentage: 0.65
+                },
+                {
+                    label: "Realizado + FCST",
+                    data: realizados,
+                    backgroundColor: "#f26b2f",
+                    borderColor: "#f26b2f",
+                    borderWidth: 1,
+                    borderRadius: 3,
+                    barPercentage: 0.75,
+                    categoryPercentage: 0.65
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+
+            animation: {
+                duration: 600,
+                easing: "easeOutQuart"
+            },
+
+            layout: {
+                padding: {
+                    top: 18,
+                    right: 8,
+                    bottom: 0,
+                    left: 8
+                }
+            },
+
+            plugins: {
+                valoresGraficos: {
+                    display: true,
+                    fontSize: 9,
+                    fontWeight: "bold",
+                    color: "#333"
+                },
+
+                legend: {
+                    display: false
+                },
+
+                tooltip: {
+                    enabled: true,
+                    backgroundColor: "rgba(0, 0, 0, 0.92)",
+                    titleColor: "#ffffff",
+                    bodyColor: "#ffffff",
+                    borderColor: "#ffffff",
+                    borderWidth: 1,
+                    padding: 10,
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${formatarValorGrafico(context.raw)}`;
+                        },
+
+                        afterBody: function(context) {
+                            const index = context[0].dataIndex;
+                            const item = dadosAgrupados[index];
+
+                            return `Saldo contra FCST: ${formatarValorGrafico(item.saldoFcst)}`;
+                        }
+                    }
+                },
+
+                title: {
+                    display: false
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grace: "25%",
+
+                    ticks: {
+                        display: false
+                    },
+
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+
+                    border: {
+                        display: false
+                    }
+                },
+
+                x: {
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    },
+
+                    border: {
+                        display: false
+                    },
+
+                    ticks: {
+                        color: "#333",
+                        font: {
+                            size: 10,
+                            weight: "bold"
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
 
 // =============================
 // ✅ EVENTOS + LOAD

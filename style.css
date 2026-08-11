@@ -2352,17 +2352,17 @@ td{
 .cards-financeiro-esquerda{
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 22px;
     width: 145px;
 
-    transform: translate(-25px, -55px);
+    transform: translate(-25px, -35px);
 }
 
 .card-financeiro{
     width: 150px;
-    height: 44px;
-    min-width: 145px;
-    padding: 3px;
+    height: 48px;
+    min-width: 150px;
+    padding: 4px;
     border-radius: 7px;
     border-top: none;
 
@@ -2384,10 +2384,10 @@ td{
 }
 
 .card-financeiro p{
-    font-size: 18px;
+    font-size: 22px;
     margin: 0;
     font-weight: 700;
-    line-height: 20px;
+    line-height: 24px;
 }
 
 /* GRÁFICO FINANCEIRO CENTRAL */
@@ -2814,4 +2814,38 @@ td{
 
 .card-ajuda-conteudo p {
     margin: 5px 0;
+}
+
+.grafico-financeiro-box {
+    width: 470px !important;
+    height: 190px !important;
+
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+
+    text-align: center;
+    transform: translate(10px, 10px);
+}
+
+#graficoFinanceiro {
+    display: block !important;
+    width: 470px !important;
+    height: 145px !important;
+    max-width: 470px !important;
+    max-height: 145px !important;
+    margin: 0 auto !important;
+}
+
+.titulo-grafico-financeiro {
+    font-size: 15px;
+    font-weight: 700;
+    color: #666;
+    margin-bottom: 2px;
+}
+
+.legenda-financeiro {
+    margin-top: 2px;
 }
