@@ -2296,7 +2296,7 @@ td{
 
 /* FILTRO FINANCEIRO */
 .container-topo-financeiro{
-    width: 900px;
+    width: 890px;
     margin: 0 auto 18px auto;
     align-items: flex-start;
 }
@@ -2307,9 +2307,9 @@ td{
     align-items: center;
 
     width: 760px;
-    margin-left: 150px;
+    margin-left: -40px;
 
-    gap: 0;
+    gap: 30px;
     background: transparent;    
     box-shadow: none;
     padding: 0;
@@ -2324,7 +2324,7 @@ td{
 }
 
 .linha-filtros-financeiro select{
-    width: 170px;
+    width: 250px;
     height: 26px;
 
     border: 2px solid #1f3a5f;
@@ -2352,15 +2352,15 @@ td{
 .cards-financeiro-esquerda{
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 17px;
     width: 145px;
 
-    transform: translate(-25px, -35px);
+    transform: translate(-25px, -55px);
 }
 
 .card-financeiro{
     width: 150px;
-    height: 48px;
+    height: 45px;
     min-width: 150px;
     padding: 4px;
     border-radius: 7px;
@@ -2500,8 +2500,8 @@ td{
 
 /* PESQUISA FINANCEIRO */
 .linha-pesquisa-financeiro{
-    width: 980px;
-    max-width: 980px;
+    width: 750px;
+    max-width: 750px;
 
     margin: -8px auto 10px auto;
 
@@ -2509,9 +2509,9 @@ td{
     justify-content: center;
     align-items: center;
 
-    gap: 10px;
+    gap: 30px;
 
-    transform: translateX(-15px);
+    transform: translateX(85px);
 
     font-size: 14px;
     font-weight: 400;}
@@ -2528,11 +2528,16 @@ td{
     outline: none;
 }
 
+/* Aproxima o texto "Pesquisar:" da barra de pesquisa */
+.linha-pesquisa-financeiro > span {
+    margin-right: -25px !important;
+}
+
 .btn-limpar-financeiro{
     height: 26px;
     padding: 0 32px;
 
-    margin-left: 40px;
+    margin-left: 10px;
 
     border: 2px solid #1f3a5f;
     background: #e6e6e6;
@@ -2582,6 +2587,13 @@ td{
 
     border-right: 2px solid #990000;
     line-height: 10px;
+
+    cursor: pointer;
+    user-select: none;
+}
+
+#tabelaFinanceiro th:hover{
+    filter: brightness(1.12);
 }
 
 #tabelaFinanceiro td{
@@ -2848,4 +2860,306 @@ td{
 
 .legenda-financeiro {
     margin-top: 2px;
+}
+
+/* =========================================
+   NOVO LAYOUT FINANCEIRO - CARDS NO TOPO
+========================================= */
+
+/* Faixa horizontal dos cards */
+.cards-financeiro-horizontal {
+    width: 930px !important;
+    max-width: 930px !important;
+
+    margin: 8px auto 8px auto !important;
+
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    gap: 14px !important;
+
+    transform: translateX(-9px) !important;
+}
+
+/* Cards financeiros em linha */
+.cards-financeiro-horizontal .card-financeiro {
+    width: 180px !important;
+    min-width: 180px !important;
+    height: 54px !important;
+
+    padding: 4px 6px !important;
+
+    border-radius: 8px !important;
+    border: none !important;
+
+    background: linear-gradient(#ff2424, #d90000) !important;
+    color: #ffffff !important;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.22) !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    transform: translateY(-10px) !important;
+}
+
+/* Título dos cards */
+.cards-financeiro-horizontal .card-financeiro h2 {
+    font-size: 9px !important;
+    line-height: 10px !important;
+    margin: 0 0 2px 0 !important;
+
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+
+    text-align: center !important;
+    white-space: normal !important;
+}
+
+/* Número dos cards */
+.cards-financeiro-horizontal .card-financeiro p {
+    font-size: 24px !important;
+    line-height: 25px !important;
+    margin: 0 !important;
+
+    font-weight: 900 !important;
+    text-align: center !important;
+}
+
+/* Remove efeito visual antigo dos cards laterais, se ainda existir */
+.cards-financeiro-esquerda,
+.cards-financeiro-direita {
+    display: none !important;
+}
+
+/* =========================================
+   NOVO LAYOUT FINANCEIRO - GRÁFICO CENTRAL
+*======================================== */
+
+.area-resumo-financeiro {
+    width: 930px !important;
+    max-width: 930px !important;
+
+    margin: 2px auto 2px auto !important;
+    padding: 0 !important;
+
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    height: 190px !important;
+
+    transform: translateX(18px) !important;
+}
+
+.grafico-financeiro-box {
+    width: 760px !important;
+    height: 185px !important;
+
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+
+    text-align: center !important;
+
+    transform: translateY(-4px) !important;
+}
+
+#graficofinanceiro {
+    display: block !important;
+
+    width: 760px !important;
+    height: 135px !important;
+
+    max-width: 760px !important;
+    max-height: 135px !important;
+
+    margin: 0 auto !important;
+}
+
+.titulo-grafico-financeiro {
+    font-size: 15px !important;
+    line-height: 17px !important;
+    font-weight: 800 !important;
+    color: #666 !important;
+
+    margin-bottom: 2px !important;
+}
+
+.legenda-financeiro {
+    margin-top: 2px !important;
+    font-size: 11px !important;
+}
+
+.legenda-financeiro span {
+    font-size: 11px !important;
+}
+
+/* =========================================
+   AJUSTE MANUAL - LINHA PESQUISA FINANCEIRO
+   Mexer aqui para posicionar FCST, pesquisa e botão limpar
+========================================= */
+
+/* Move o conjunto inteiro da linha para esquerda/direita */
+.linha-pesquisa-financeiro {
+    transform: translateX(10px) !important;
+}
+
+/* Move apenas o bloco FCST */
+.linha-pesquisa-financeiro .item-filtro {
+    margin-left: 0px !important;
+    margin-right: 8px !important;
+    transform: translateX(3px) translatey(10px) !important;
+}
+
+/* Tamanho do select FCST */
+#filtroFCSTFinanceiro {
+    width: 125px !important;
+    height: 26px !important;
+}
+
+/* Aproxima/afasta o texto "Pesquisar:" da barra */
+.linha-pesquisa-financeiro > span {
+    margin-right: 10px !important;
+    transform: translateX(-5px) translatey(10px) !important;
+}
+
+/* Tamanho da barra de pesquisa */
+.linha-pesquisa-financeiro input {
+    width: 500px !important;
+    height: 26px !important;
+}
+
+/* Distância e tamanho do botão Limpar */
+.btn-limpar-financeiro {
+    margin-left: 10px !important;
+    height: 26px !important;
+    padding: 0 32px !important;
+}
+
+/* =========================================
+   AJUSTE DIRETO - TAMANHO DA BARRA PESQUISAR FINANCEIRO
+========================================= */
+
+#pesquisaFinanceiro {
+    width: 530px !important;
+    min-width: 530px !important;
+    max-width: 530px !important;
+
+    flex: 0 0 530px !important;
+
+    height: 26px !important;
+}
+
+/* =========================================
+   AJUSTE FINO - MOVER INPUT E BOTÃO PESQUISA FINANCEIRO
+========================================= */
+
+/* Move somente a barra de pesquisa para a esquerda */
+#pesquisaFinanceiro {
+    transform: translateX(-35px) translatey(10px) !important;
+}
+
+/* Move somente o botão Limpar para a esquerda junto da barra */
+.btn-limpar-financeiro {
+    transform: translateX(-35px) translatey(10px) !important;
+}
+
+/* =========================================
+   ÍCONES NOS CARDS FINANCEIROS
+========================================= */
+
+.cards-financeiro-horizontal .card-financeiro {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Ícone branco lateral */
+.icone-card-financeiro {
+    position: absolute !important;
+
+    left: 12px !important;
+    top: 50% !important;
+
+    width: 24px !important;
+    height: 24px !important;
+
+    transform: translateY(-50%) !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    color: #ffffff !important;
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+
+    opacity: 0.95 !important;
+    pointer-events: none !important;
+}
+
+/* Desloca levemente texto e número para não bater no ícone */
+.cards-financeiro-horizontal .card-financeiro h2,
+.cards-financeiro-horizontal .card-financeiro p {
+    transform: translateX(10px) !important;
+}
+
+/* =========================================
+   PADRONIZAÇÃO DOS ÍCONES DOS CARDS FINANCEIROS
+========================================= */
+
+.icone-card-financeiro {
+    position: absolute !important;
+
+    left: 12px !important;
+    top: 50% !important;
+
+    width: 26px !important;
+    height: 26px !important;
+
+    transform: translateY(-50%) !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    color: #ffffff !important;
+
+    font-family: Arial, sans-serif !important;
+    font-size: 21px !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+
+    text-align: center !important;
+
+    opacity: 0.95 !important;
+    pointer-events: none !important;
+}
+
+/* Ajuste fino individual dos ícones financeiros */
+.icone-meta {
+    font-size: 21px !important;
+}
+
+.icone-fcst {
+    font-size: 22px !important;
+}
+
+.icone-realizado {
+    font-size: 19px !important;
+}
+
+.icone-saldo-fcst {
+    font-size: 21px !important;
+}
+
+.icone-saldo-meta {
+    font-size: 20px !important;
 }

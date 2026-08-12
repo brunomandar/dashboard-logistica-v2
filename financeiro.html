@@ -61,22 +61,6 @@
                 BASE DE DADOS
             </button>
 
-            <button 
-                type="button"
-                class="btn-reuniao-estrategica"
-                onclick="window.open('https://corpclarobr.sharepoint.com/:p:/r/sites/USER-_PortfoliodeprojetosLogsticos/Documentos%20Compartilhados/Demanda%20Transporte%2020260622.pptx?d=w0ae054be2c3445e2b27e257a1b1d118d&csf=1&web=1&e=aP2vbe', '_blank')"
-            >
-                ONE PAGE - RE
-            </button>
-
-<button 
-    type="button"
-    class="btn-planner"
-    onclick="window.open('https://teams.microsoft.com/l/entity/com.microsoft.teamspace.tab.planner/mytasks?tenantId=55247d4b-b435-47a5-881b-ca7627434e79&webUrl=https%3A%2F%2Ftasks.teams.microsoft.com%2Fteamsui%2FpersonalApp%2Falltasklists&context=%7B%22subEntityId%22%3A%22%2Fv1%2Fplan%2F5xNoHrbA8U6uChDDpDROe2QAEuGj%22%7D', '_blank')"
->
-    PLANNER
-</button>
-
         </div>
 
         <div class="icone-logistica">
@@ -120,14 +104,9 @@
                         </div>
 
                         <div class="item-filtro">
-                            <span>Status:</span>
-                            <select id="filtroStatusFinanceiro">
+                            <span>Stage:</span>
+                            <select id="filtroStageFinanceiro">
                                 <option value="">Todos</option>
-                                <option value="NO PRAZO">NO PRAZO</option>
-                                <option value="ATENÇÃO">ATENÇÃO</option>
-                                <option value="ATRASADO">ATRASADO</option>
-                                <option value="CANCELADO">CANCELADO</option>
-                                <option value="CONCLUIDO">CONCLUIDO</option>
                             </select>
                         </div>
 
@@ -135,61 +114,61 @@
 
                 </div>
 
-                <!-- ÁREA PRINCIPAL -->
-                <div class="area-resumo-financeiro">
+                <!-- CARDS FINANCEIROS HORIZONTAIS -->
+<div class="cards-financeiro-horizontal">
 
-                    <!-- CARDS ESQUERDA -->
-                    <div class="cards-financeiro-esquerda">
+    <div class="card-financeiro">
+        <span class="icone-card-financeiro icone-meta">◎</span>
+        <h2>META</h2>
+        <p id="metaFinanceiro">--</p>
+    </div>
 
-                        <div class="card-financeiro">
-                            <h2>Meta</h2>
-                            <p id="metaFinanceiro">--</p>
-                        </div>
+    <div class="card-financeiro">
+        <span class="icone-card-financeiro icone-fcst">↗</span>
+        <h2>FCST</h2>
+        <p id="fcstFinanceiro">--</p>
+    </div>
 
-                        <div class="card-financeiro">
-                            <h2>FCST</h2>
-                            <p id="fcstFinanceiro">--</p>
-                        </div>
+    <div class="card-financeiro">
+        <span class="icone-card-financeiro icone-realizado">∑</span>
+        <h2>REAL + FCST</h2>
+        <p id="realizadoFCSTFinanceiro">--</p>
+    </div>
 
-                        <div class="card-financeiro">
-                            <h2>REAL + FCST</h2>
-                            <p id="realizadoFCSTFinanceiro">--</p>
-                        </div>
+    <div class="card-financeiro">
+        <span class="icone-card-financeiro icone-saldo-fcst">±</span>
+        <h2>SALDO CONTRA FCST</h2>
+        <p id="saldoFinanceiro">--</p>
+    </div>
 
-                    </div>
+    <div class="card-financeiro">
+        <span class="icone-card-financeiro icone-saldo-meta">Δ</span>
+        <h2>SALDO CONTRA META</h2>
+        <p id="saldoMetaFinanceiro">--</p>
+    </div>
 
-                    <!-- GRÁFICO CENTRAL -->
-                    <div class="grafico-financeiro-box">
+</div>
 
-                        <div class="titulo-grafico-financeiro">
-                            Meta x Realizado + FCST
-                        </div>
+<!-- ÁREA PRINCIPAL -->
+<div class="area-resumo-financeiro">
 
-                        <canvas id="graficoFinanceiro"></canvas>
+    <!-- GRÁFICO CENTRAL -->
+    <div class="grafico-financeiro-box">
 
-                        <div class="legenda-financeiro">
-                            <span><i class="legenda-meta"></i> Meta</span>
-                            <span><i class="legenda-realizado"></i> Realizado + FCST</span>
-                        </div>
+        <div class="titulo-grafico-financeiro">
+            Meta x Realizado + FCST
+        </div>
 
-                    </div>
+        <canvas id="graficoFinanceiro"></canvas>
 
-                    <!-- CARDS DIREITA -->
-                    <div class="cards-financeiro-direita">
+        <div class="legenda-financeiro">
+            <span><i class="legenda-meta"></i> Meta</span>
+            <span><i class="legenda-realizado"></i> Realizado + FCST</span>
+        </div>
 
-                        <div class="card-financeiro card-financeiro-status">
-                            <h2>Status</h2>    
-                            <p id="statusFinanceiro">ATRASADO</p>
-                        </div>
+    </div>
 
-                        <div class="card-financeiro card-financeiro-saldo">
-                            <h2>Saldo</h2>
-                            <p id="saldoFinanceiro">--</p>
-                        </div>
-
-                    </div>
-
-                </div>
+</div>
 
                 <!-- PESQUISA -->
                 <div class="linha-pesquisa-financeiro">
@@ -233,19 +212,19 @@
                     <table id="tabelaFinanceiro">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Demanda</th>
-                                <th>Gerente</th>
-                                <th>Tipo</th>
-                                <th>Stage</th>
-                                <th>Status</th>
-                                <th>Dt Inicio Captura</th>
-                                <th>Dt Fim Captura</th>
-                                <th>Meta 2026</th>
-                                <th>FCST 2026</th>
-                                <th>Realizado + FCST 2026</th>
-                                <th>Saldo FCST</th>
-                                <th>Plano de Ação/Recuperação</th>
+                                <th onclick="ordenarTabelaFinanceiro('ID')">ID</th>
+                                <th onclick="ordenarTabelaFinanceiro('Demanda')">Demanda</th>
+                                <th onclick="ordenarTabelaFinanceiro('Gerente')">Gerente</th>
+                                <th onclick="ordenarTabelaFinanceiro('Tipo')">Tipo</th>
+                                <th onclick="ordenarTabelaFinanceiro('Stage')">Stage</th>
+                                <th onclick="ordenarTabelaFinanceiro('Status')">Status</th>
+                                <th onclick="ordenarTabelaFinanceiro('Dt Inicio Captura')">Dt Inicio Captura</th>
+                                <th onclick="ordenarTabelaFinanceiro('Dt Fim Captura')">Dt Fim Captura</th>
+                                <th onclick="ordenarTabelaFinanceiro('Meta 2026')">Meta 2026</th>
+                                <th onclick="ordenarTabelaFinanceiro('FCST 2026')">FCST 2026</th>
+                                <th onclick="ordenarTabelaFinanceiro('Realizado + FCST 2026')">Realizado + FCST 2026</th>
+                                <th onclick="ordenarTabelaFinanceiro('Saldo FCST')">Saldo FCST</th>
+                                <th onclick="ordenarTabelaFinanceiro('Plano de Ação/Recuperação')">Plano de Ação/Recuperação</th>
                             </tr>
                         </thead>
 

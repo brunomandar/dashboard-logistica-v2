@@ -12,6 +12,11 @@ let ordenacaoTabelaAcoes = {
     direcao: "asc"
 };
 
+let ordenacaoTabelaFinanceiro = {
+    coluna: "ID",
+    direcao: "asc"
+};
+
 function extrairNumeroLog(id) {
     const texto = (id || "").toString().toUpperCase().trim();
 
@@ -1712,7 +1717,12 @@ function carregarFiltrosFinanceiro() {
                 ...new Set(financeiroCache.map(item => item.Gerente).filter(Boolean))
             ];
 
+            const stages = [
+                ...new Set(financeiroCache.map(item => item.Stage).filter(Boolean))
+            ];
+
             preencherSelectFinanceiro("filtroGerenteFinanceiro", gerentes);
+            preencherSelectFinanceiro("filtroStageFinanceiro", stages);
 
             carregarFinanceiro();
         })
@@ -1854,7 +1864,7 @@ function linhaContemPesquisaFinanceiro(item, termo) {
 function aplicarFiltrosFinanceiro(lista) {
     const gerente = document.getElementById("filtroGerenteFinanceiro")?.value || "";
     const tipo = document.getElementById("filtroTipoFinanceiro")?.value || "";
-    const status = document.getElementById("filtroStatusFinanceiro")?.value || "";
+    const stage = document.getElementById("filtroStageFinanceiro")?.value || "";
     const fcst = document.getElementById("filtroFCSTFinanceiro")?.value || "";
     const pesquisa = document.getElementById("pesquisaFinanceiro")?.value || "";
 
@@ -1871,12 +1881,11 @@ function aplicarFiltrosFinanceiro(lista) {
         );
     }
 
-    if (status) {
-        const statusNormalizado = normalizarFinanceiro(status);
+    if (stage) {
+        const stageNormalizado = normalizarFinanceiro(stage);
 
         dados = dados.filter(item =>
-            normalizarFinanceiro(item.Status) === statusNormalizado ||
-            normalizarFinanceiro(item["Status Geral"]) === statusNormalizado
+            normalizarFinanceiro(item.Stage) === stageNormalizado
         );
     }
 
@@ -1895,13 +1904,238 @@ function aplicarFiltrosFinanceiro(lista) {
     return dados;
 }
 
+function ordenarTabelaFinanceiro(coluna) {
+    if (ordenacaoTabelaFinanceiro.coluna === coluna) {
+        ordenacaoTabelaFinanceiro.direcao =
+            ordenacaoTabelaFinanceiro.direcao === "asc" ? "desc" : "asc";
+    } else {
+        ordenacaoTabelaFinanceiro.coluna = coluna;
+        ordenacaoTabelaFinanceiro.direcao = "asc";
+    }
+
+    carregarFinanceiro();
+}
+
+function aplicarOrdenacaoTabelaFinanceiro(lista) {
+    const coluna = ordenacaoTabelaFinanceiro.coluna;
+    const direcao = ordenacaoTabelaFinanceiro.direcao;
+    const multiplicador = direcao === "asc" ? 1 : -1;
+
+    const normalizarTexto = (valor) => {
+        return (valor || "")
+            .toString()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .toUpperCase();
+    };
+
+    const obterDataOrdenacao = (valor) => {
+        if (!valor || valor === "-") return null;
+
+        if (typeof valor === "number") {
+            return valor;
+        }
+
+        const texto = valor.toString().trim();
+
+        const numero = Number(texto);
+        if (!isNaN(numero)) {
+            return numero;
+        }
+
+        const data = new Date(texto);
+        if (!isNaN(data)) {
+            return data.getTime();
+        }
+
+        return null;
+    };
+
+    const obterNumeroOrdenacao = (valor) => {
+        if (valor === null || valor === undefined || valor === "") return null;
+
+        if (typeof valor === "number") {
+            return valor;
+        }
+
+        let texto = valor.toString().trim();
+
+        if (texto === "" || texto === "-" || texto === "#N/D" || texto === "#N/A") {
+            return null;
+        }
+
+        texto = texto
+            .replace("R$", "")
+            .replace(/\s/g, "")
+            .replace(/\./g, "")
+            .replace(",", ".");
+
+        const numero = Number(texto);
+
+        return isNaN(numero) ? null : numero;
+    };
+
+    const obterValor = (item, coluna) => {
+        if (coluna === "ID") {
+            return item.ID ?? item["ID FIN"] ?? "";
+        }
+
+        if (coluna === "Demanda") {
+            return item.Projeto ?? item.Demanda ?? "";
+        }
+
+        if (coluna === "Gerente") {
+            return item.Gerente ?? "";
+        }
+
+        if (coluna === "Tipo") {
+            return item["Tipo Orçamento"] ?? item.Tipo ?? "";
+        }
+
+        if (coluna === "Stage") {
+            return item.Stage ?? "";
+        }
+
+        if (coluna === "Status") {
+            return item.Status ?? item["Status Geral"] ?? "";
+        }
+
+        if (coluna === "Dt Inicio Captura") {
+            return (
+                item["Dt Inicio Captura"] ??
+                item["Dt Início Captura"] ??
+                item["Dt Inicio"] ??
+                item["Dt Início"] ??
+                item["Início Captura"] ??
+                item["Inicio Captura"] ??
+                ""
+            );
+        }
+
+        if (coluna === "Dt Fim Captura") {
+            return (
+                item["Dt Fim Captura"] ??
+                item["Dt Fim"] ??
+                item["Fim Captura"] ??
+                ""
+            );
+        }
+
+        if (coluna === "Meta 2026") {
+            return item["Meta 2026"];
+        }
+
+        if (coluna === "FCST 2026") {
+            return item["FCST 2026"];
+        }
+
+        if (coluna === "Realizado + FCST 2026") {
+            return item["Realizado + FCST 2026"];
+        }
+
+        if (coluna === "Saldo FCST") {
+            return item["Saldo contra FCST"];
+        }
+
+        if (coluna === "Plano de Ação/Recuperação") {
+            return item["Plano de Ação/Recuperação"] ?? "";
+        }
+
+        return "";
+    };
+
+    return [...lista].sort((a, b) => {
+        if (coluna === "ID") {
+            const idA = extrairNumeroLog(a.ID ?? a["ID FIN"]);
+            const idB = extrairNumeroLog(b.ID ?? b["ID FIN"]);
+
+            if (idA !== idB) {
+                return (idA - idB) * multiplicador;
+            }
+
+            return normalizarTexto(a.ID ?? a["ID FIN"]).localeCompare(
+                normalizarTexto(b.ID ?? b["ID FIN"]),
+                "pt-BR",
+                {
+                    sensitivity: "base",
+                    numeric: true
+                }
+            ) * multiplicador;
+        }
+
+        if (
+            coluna === "Meta 2026" ||
+            coluna === "FCST 2026" ||
+            coluna === "Realizado + FCST 2026" ||
+            coluna === "Saldo FCST"
+        ) {
+            const valorA = obterNumeroOrdenacao(obterValor(a, coluna));
+            const valorB = obterNumeroOrdenacao(obterValor(b, coluna));
+
+            if (valorA === null && valorB === null) {
+                return extrairNumeroLog(a.ID ?? a["ID FIN"]) - extrairNumeroLog(b.ID ?? b["ID FIN"]);
+            }
+
+            if (valorA === null) return 1;
+            if (valorB === null) return -1;
+
+            if (valorA !== valorB) {
+                return (valorA - valorB) * multiplicador;
+            }
+
+            return extrairNumeroLog(a.ID ?? a["ID FIN"]) - extrairNumeroLog(b.ID ?? b["ID FIN"]);
+        }
+
+        if (
+            coluna === "Dt Inicio Captura" ||
+            coluna === "Dt Fim Captura"
+        ) {
+            const dataA = obterDataOrdenacao(obterValor(a, coluna));
+            const dataB = obterDataOrdenacao(obterValor(b, coluna));
+
+            if (dataA === null && dataB === null) {
+                return extrairNumeroLog(a.ID ?? a["ID FIN"]) - extrairNumeroLog(b.ID ?? b["ID FIN"]);
+            }
+
+            if (dataA === null) return 1;
+            if (dataB === null) return -1;
+
+            if (dataA !== dataB) {
+                return (dataA - dataB) * multiplicador;
+            }
+
+            return extrairNumeroLog(a.ID ?? a["ID FIN"]) - extrairNumeroLog(b.ID ?? b["ID FIN"]);
+        }
+
+        const valorA = normalizarTexto(obterValor(a, coluna));
+        const valorB = normalizarTexto(obterValor(b, coluna));
+
+        const comparacao = valorA.localeCompare(
+            valorB,
+            "pt-BR",
+            {
+                sensitivity: "base",
+                numeric: true
+            }
+        );
+
+        if (comparacao !== 0) {
+            return comparacao * multiplicador;
+        }
+
+        return extrairNumeroLog(a.ID ?? a["ID FIN"]) - extrairNumeroLog(b.ID ?? b["ID FIN"]);
+    });
+}
+
 function carregarFinanceiro() {
-    const dadosFiltrados = aplicarFiltrosFinanceiro(financeiroCache);
+    let dadosFiltrados = aplicarFiltrosFinanceiro(financeiroCache);
 
     const metaTotal = calcularSomaFinanceira(dadosFiltrados, "Meta 2026");
     const fcstTotal = calcularSomaFinanceira(dadosFiltrados, "FCST 2026");
     const realizadoFCSTTotal = calcularSomaFinanceira(dadosFiltrados, "Realizado + FCST 2026");
     const saldoTotal = calcularSomaFinanceira(dadosFiltrados, "Saldo contra FCST");
+    const saldoMetaTotal = realizadoFCSTTotal - metaTotal;
 
     const setTexto = (id, valor) => {
         const elemento = document.getElementById(id);
@@ -1915,14 +2149,11 @@ function carregarFinanceiro() {
     setTexto("fcstFinanceiro", formatarNumeroFinanceiro(fcstTotal));
     setTexto("realizadoFCSTFinanceiro", formatarNumeroFinanceiro(realizadoFCSTTotal));
     setTexto("saldoFinanceiro", formatarNumeroFinanceiro(saldoTotal));
+    setTexto("saldoMetaFinanceiro", formatarNumeroFinanceiro(saldoMetaTotal));
 
     renderizarGraficoFinanceiro(dadosFiltrados);
 
-    const statusFinanceiro = document.getElementById("statusFinanceiro");
-
-    if (statusFinanceiro) {
-        statusFinanceiro.innerText = saldoTotal >= 0 ? "NO PRAZO" : "ATRASADO";
-    }
+    dadosFiltrados = aplicarOrdenacaoTabelaFinanceiro(dadosFiltrados);
 
     const tabela = document.querySelector("#tabelaFinanceiro tbody");
 
@@ -2220,7 +2451,7 @@ if (document.getElementById("filtroGerenteFinanceiro")) {
 
     document.getElementById("filtroGerenteFinanceiro")?.addEventListener("change", carregarFinanceiro);
     document.getElementById("filtroTipoFinanceiro")?.addEventListener("change", carregarFinanceiro);
-    document.getElementById("filtroStatusFinanceiro")?.addEventListener("change", carregarFinanceiro);
+    document.getElementById("filtroStageFinanceiro")?.addEventListener("change", carregarFinanceiro);
     document.getElementById("filtroFCSTFinanceiro")?.addEventListener("change", carregarFinanceiro);
 
     document.getElementById("pesquisaFinanceiro")?.addEventListener("input", carregarFinanceiro);
