@@ -5,6 +5,7 @@ from fastapi.responses import PlainTextResponse
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
 
 load_dotenv()
@@ -41,6 +42,12 @@ financeiro_collection = db["financeiro"]
 # =========================
 # FUNÇÕES AUXILIARES
 # =========================
+
+def obter_host_mongo(uri):
+    try:
+        return uri.split("@")[-1].split("/")[0]
+    except Exception:
+        return "Host nao identificado"
 
 def normalizar_id(valor):
     if valor is None:
@@ -189,6 +196,44 @@ def aplicar_filtros_financeiro(
         ]
 
     return resultado
+
+
+@app.get("/debug/mongo")
+def debug_mongo():
+    projeto_mais_recente = db["projetos"].find_one(
+        {},
+        {"_id": 0, "ID": 1, "Projeto": 1, "ultima_atualizacao_mongo": 1},
+        sort=[("ultima_atualizacao_mongo", -1)]
+    )
+
+    financeiro_mais_recente = db["financeiro"].find_one(
+        {},
+        {"_id": 0, "ID FIN": 1, "Stage": 1, "ultima_atualizacao_mongo": 1},
+        sort=[("ultima_atualizacao_mongo", -1)]
+    )
+
+    def converter_datas(doc):
+        if not doc:
+            return None
+
+        doc_convertido = {}
+
+        for chave, valor in doc.items():
+            if isinstance(valor, datetime):
+                doc_convertido[chave] = valor.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                doc_convertido[chave] = valor
+
+        return doc_convertido
+
+    return {
+        "mongo_host": obter_host_mongo(MONGO_URL),
+        "database": db.name,
+        "total_projetos": db["projetos"].count_documents({}),
+        "total_financeiro": db["financeiro"].count_documents({}),
+        "projeto_mais_recente": converter_datas(projeto_mais_recente),
+        "financeiro_mais_recente": converter_datas(financeiro_mais_recente)
+    }
 
 
 # =========================
