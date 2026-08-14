@@ -507,10 +507,10 @@ th {
 .texto-sidebar{
     color:white;
     text-align:center;
-    font-size:14px;
+    font-size:11px;
     font-weight:bold;
-    margin-top:15px;
-    line-height:22px;
+    margin-top:20px;
+    line-height:15px;
 }
 
 .menu-lateral{
@@ -521,12 +521,12 @@ th {
 }
 
 .menu-lateral button{
-    width:150px;
-    height:60px;
-    border-radius:12px;
+    width:120px;
+    height:48px;
+    border-radius:8px;
     border:3px solid #1f1f1f;
     background:#d9d9d9;
-    font-size:18px;
+    font-size:15px;
     font-weight:bold;
     cursor:pointer;
     transition:.2s;
@@ -1535,9 +1535,9 @@ td{
 }
 
 .sidebar{
-    width: 220px;
-    min-width: 220px;
-    height: 100vh;
+    width: 165px !important;
+    min-width: 165px !important;
+    padding: 20px 8px !important;
 }
 
 .conteudo-dashboard{
@@ -3162,4 +3162,148 @@ td{
 
 .icone-saldo-meta {
     font-size: 20px !important;
+}
+
+/* =========================================
+   CABEÇALHO FIXO NAS TABELAS
+========================================= */
+
+/* Demandas */
+#tabelaProjetos thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(#ff1f1f, #c90000) !important;
+}
+
+/* Ações */
+#tabelaAcoes thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(#ff1f1f, #c90000) !important;
+}
+
+/* Financeiro */
+#tabelaFinanceiro thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(#ff1f1f, #c90000) !important;
+}
+
+/* =========================================
+   FILTRO MULTISELECT - SITUAÇÃO DEMANDAS
+========================================= */
+
+.item-filtro-situacao {
+    position: relative;
+}
+
+.dropdown-situacao {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-situacao {
+    width: 165px;
+    height: 26px;
+
+    border: 2px solid #1f3a5f;
+    background: #ffffff;
+    color: #000;
+
+    font-size: 14px;
+    text-align: left;
+
+    padding: 2px 26px 2px 8px;
+
+    cursor: pointer;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.btn-situacao::after {
+    content: "▼";
+    position: absolute;
+    right: 8px;
+    top: 4px;
+    font-size: 11px;
+    color: #333;
+}
+
+.menu-situacao {
+    display: none;
+
+    position: absolute;
+    top: 28px;
+    left: 0;
+
+    width: 165px;
+
+    background: #ffffff;
+    border: 1px solid #bfbfbf;
+    box-shadow: 0 4px 8px rgba(0,0,0,.18);
+
+    z-index: 9999;
+
+    text-align: left;
+}
+
+.dropdown-situacao.aberto .menu-situacao {
+    display: block;
+}
+
+.menu-situacao label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 8px;
+
+    font-size: 14px;
+    font-weight: 400;
+
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.menu-situacao label:hover {
+    background: #eeeeee;
+}
+
+.menu-situacao input {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+/* =========================================
+   CORREÇÃO - FILTRO SITUAÇÃO ACIMA DOS GRÁFICOS
+========================================= */
+
+/* Garante que a área dos filtros fique acima dos gráficos */
+.container-topo-acoes,
+.linha-filtros,
+.item-filtro-situacao,
+.dropdown-situacao {
+    position: relative !important;
+    z-index: 99990 !important;
+}
+
+/* Menu aberto da Situação sempre por cima */
+.menu-situacao {
+    position: absolute !important;
+    z-index: 99999 !important;
+}
+
+/* Mantém a área dos gráficos em uma camada abaixo */
+.area-resumo-demandas,
+.graficos-demandas,
+.grafico-box,
+.grafico-donut-menor,
+#graficoPrioridade,
+#graficoGerenciaForum {
+    position: relative !important;
+    z-index: 1 !important;
 }

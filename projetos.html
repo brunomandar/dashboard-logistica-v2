@@ -112,14 +112,38 @@
                 <option value="">Todos</option>
             </select>
         </div>
-        <div class="item-filtro">
-            <span>Situação:</span>
-            <select id="filtroSituacao">
-                <option value="">Todas</option>
-                <option value="ATIVAS">Ativas</option>
-                <option value="NAO_ATIVAS">Não Ativas</option>
-            </select>
+        <div class="item-filtro item-filtro-situacao">
+    <span>Situação:</span>
+
+    <div class="dropdown-situacao" id="dropdownSituacao">
+        <button type="button" id="btnSituacao" class="btn-situacao">
+            Todas
+        </button>
+
+        <div class="menu-situacao" id="menuSituacao">
+            <label>
+                <input type="checkbox" id="situacaoTodas" value="TODAS" checked>
+                Todas
+            </label>
+
+            <label>
+                <input type="checkbox" class="check-situacao" value="ATIVAS">
+                Ativas
+            </label>
+
+            <label>
+                <input type="checkbox" class="check-situacao" value="NAO_ATIVAS">
+                Não Ativas
+            </label>
+
+            <label>
+                <input type="checkbox" class="check-situacao" value="BACKLOG">
+                Backlog
+            </label>
         </div>
+    </div>
+</div>
+
     </div>
 </div>
 

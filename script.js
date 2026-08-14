@@ -468,6 +468,119 @@ function carregarFiltrosProjetos() {
         .catch(err => console.error("Erro ao carregar projetos:", err));
 }
 
+function obterSituacoesSelecionadas() {
+    const todas = document.getElementById("situacaoTodas");
+    const checks = document.querySelectorAll(".check-situacao");
+
+    if (!todas) {
+        return ["TODAS"];
+    }
+
+    if (todas.checked) {
+        return ["TODAS"];
+    }
+
+    const selecionadas = [...checks]
+        .filter(check => check.checked)
+        .map(check => check.value);
+
+    if (selecionadas.length === 0) {
+        todas.checked = true;
+        return ["TODAS"];
+    }
+
+    return selecionadas;
+}
+
+function atualizarTextoBotaoSituacao() {
+    const btn = document.getElementById("btnSituacao");
+    const todas = document.getElementById("situacaoTodas");
+    const checks = document.querySelectorAll(".check-situacao");
+
+    if (!btn || !todas) return;
+
+    if (todas.checked) {
+        btn.innerText = "Todas";
+        return;
+    }
+
+    const selecionadas = [...checks]
+        .filter(check => check.checked)
+        .map(check => {
+            if (check.value === "ATIVAS") return "Ativas";
+            if (check.value === "NAO_ATIVAS") return "Não Ativas";
+            if (check.value === "BACKLOG") return "Backlog";
+            return check.value;
+        });
+
+    if (selecionadas.length === 0) {
+        todas.checked = true;
+        btn.innerText = "Todas";
+        return;
+    }
+
+    if (selecionadas.length === 1) {
+        btn.innerText = selecionadas[0];
+        return;
+    }
+
+    btn.innerText = `${selecionadas.length} selecionadas`;
+}
+
+function configurarFiltroSituacao() {
+    const dropdown = document.getElementById("dropdownSituacao");
+    const btn = document.getElementById("btnSituacao");
+    const todas = document.getElementById("situacaoTodas");
+    const checks = document.querySelectorAll(".check-situacao");
+
+    if (!dropdown || !btn || !todas) return;
+
+    btn.addEventListener("click", function (event) {
+        event.stopPropagation();
+        dropdown.classList.toggle("aberto");
+    });
+
+    todas.addEventListener("change", function () {
+        if (todas.checked) {
+            checks.forEach(check => {
+                check.checked = false;
+            });
+        } else {
+            const algumSelecionado = [...checks].some(check => check.checked);
+
+            if (!algumSelecionado) {
+                todas.checked = true;
+            }
+        }
+
+        atualizarTextoBotaoSituacao();
+        carregarDashboard();
+    });
+
+    checks.forEach(check => {
+        check.addEventListener("change", function () {
+            const algumSelecionado = [...checks].some(c => c.checked);
+
+            if (algumSelecionado) {
+                todas.checked = false;
+            } else {
+                todas.checked = true;
+            }
+
+            atualizarTextoBotaoSituacao();
+            carregarDashboard();
+        });
+    });
+
+    document.addEventListener("click", function (event) {
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove("aberto");
+        }
+    });
+
+    atualizarTextoBotaoSituacao();
+}
+
 // =============================
 // ✅ 2. DASHBOARD PROJETOS (CORRIGIDO)
 // =============================
@@ -477,7 +590,7 @@ function carregarDashboard() {
     const status = document.getElementById("filtroStatus")?.value || "";
     const pesquisa = document.getElementById("pesquisaProjetos")?.value || "";
     const somenteRE = document.getElementById("filtroRE")?.checked || false;
-    const situacao = document.getElementById("filtroSituacao")?.value || "";
+    const situacoesSelecionadas = obterSituacoesSelecionadas();
 
     const normalizar = (valor) => {
     return (valor || "")
@@ -634,22 +747,59 @@ const ehConcluido = (item) => {
 
     return (
         statusGeral === "CONCLUIDO" ||
-        statusPrazo === "CONCLUIDO"
+        statusGeral === "CONCLUÍDO" ||
+        statusGeral === "ENCERRADO" ||
+        statusPrazo === "CONCLUIDO" ||
+        statusPrazo === "CONCLUÍDO"
     );
 };
 
+const ehBacklog = (item) => {
+    const statusGeral = normalizar(item["Status Geral"]);
+
+    return statusGeral === "BACKLOG";
+};
+
 const ehDemandaAtiva = (item) => {
-    const statusPrazo = normalizar(item.Status);
+    const statusGeral = normalizar(item["Status Geral"]);
 
     return (
-        statusPrazo === "NO PRAZO" ||
-        statusPrazo === "ATENCAO" ||
-        statusPrazo === "ATRASADO"
+        statusGeral === "EXECUCAO" ||
+        statusGeral === "EXECUÇÃO" ||
+        statusGeral === "PLANEJADO"
     );
 };
 
 const ehDemandaNaoAtiva = (item) => {
-    return ehCancelado(item) || ehConcluido(item);
+    const statusGeral = normalizar(item["Status Geral"]);
+
+    return statusGeral === "ENCERRADO";
+};
+
+const passaFiltroSituacao = (item) => {
+    if (
+        !situacoesSelecionadas ||
+        situacoesSelecionadas.length === 0 ||
+        situacoesSelecionadas.includes("TODAS")
+    ) {
+        return true;
+    }
+
+    return situacoesSelecionadas.some(situacao => {
+        if (situacao === "ATIVAS") {
+            return ehDemandaAtiva(item);
+        }
+
+        if (situacao === "NAO_ATIVAS") {
+            return ehDemandaNaoAtiva(item);
+        }
+
+        if (situacao === "BACKLOG") {
+            return ehBacklog(item);
+        }
+
+        return false;
+    });
 };
 
 const escaparAtributoHtml = (valor) => {
@@ -686,16 +836,17 @@ const obterJustificativaCancelamento = (item) => {
     const okStatus = !status || p["Status Geral"] === status;
     const okPesquisa = linhaContemPesquisa(p, pesquisa);
     const okRE = !somenteRE || normalizar(p.RE) === "S";
+    const okSituacao = passaFiltroSituacao(p);
 
-    let okSituacao = true;
-
-    if (situacao === "ATIVAS") {
-        okSituacao = ehDemandaAtiva(p);
-    } else if (situacao === "NAO_ATIVAS") {
-        okSituacao = ehDemandaNaoAtiva(p);
-    }
-
-    return okDuplicado && okGerente && okForum && okStatus && okPesquisa && okRE && okSituacao;
+    return (
+        okDuplicado &&
+        okGerente &&
+        okForum &&
+        okStatus &&
+        okPesquisa &&
+        okRE &&
+        okSituacao
+    );
 });
 
     const total = projetos.length;
@@ -2430,7 +2581,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("filtroGerente").addEventListener("change", carregarDashboard);
         document.getElementById("filtroForum").addEventListener("change", carregarDashboard);
         document.getElementById("filtroStatus").addEventListener("change", carregarDashboard);
-        document.getElementById("filtroSituacao")?.addEventListener("change", carregarDashboard);
+
+        configurarFiltroSituacao();
     }
 
     // ✅ AÇÕES (Só roda se estiver na tela de ações)
