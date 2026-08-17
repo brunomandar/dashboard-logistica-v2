@@ -1558,9 +1558,9 @@ td{
 }
 
 .miolo-dashboard{
-    width: 1050px;
-    min-width: 1050px;
-    max-width: 1050px;
+    width: 1120px;
+    min-width: 1120px;
+    max-width: 1120px;
 
     margin: 0 auto;
 
@@ -1621,9 +1621,9 @@ td{
 }
 
 .miolo-dashboard-acoes{
-    width: 1050px;
-    min-width: 1050px;
-    max-width: 1050px;
+    width: 1120px;
+    min-width: 1120px;
+    max-width: 1120px;
 
     margin: 0 auto;
 
@@ -2275,11 +2275,11 @@ td{
 ===================================================== */
 
 .miolo-dashboard-financeiro{
-    width: 1050px;
-    min-width: 1050px;
-    max-width: 1050px;
+    width: 1120px;
+    min-width: 1120px;
+    max-width: 1120px;
 
-    margin: 0 auto;
+    margin: -25px auto;
 
     display: flex;
     flex-direction: column;
@@ -2313,6 +2313,8 @@ td{
     background: transparent;    
     box-shadow: none;
     padding: 0;
+
+    transform: translateY(15px);
 }
 
 .linha-filtros-financeiro .item-filtro{
@@ -2880,7 +2882,7 @@ td{
 
     gap: 14px !important;
 
-    transform: translateX(-9px) !important;
+    transform: translate(-9px, 10px) !important;
 }
 
 /* Cards financeiros em linha */
@@ -2968,7 +2970,7 @@ td{
 
     text-align: center !important;
 
-    transform: translateY(-4px) !important;
+    transform: translateY(1px) !important;
 }
 
 #graficofinanceiro {
@@ -3008,7 +3010,7 @@ td{
 
 /* Move o conjunto inteiro da linha para esquerda/direita */
 .linha-pesquisa-financeiro {
-    transform: translateX(10px) !important;
+    transform: translate(10px, 5px) !important;
 }
 
 /* Move apenas o bloco FCST */
@@ -3283,7 +3285,6 @@ td{
 ========================================= */
 
 /* Garante que a área dos filtros fique acima dos gráficos */
-.container-topo-acoes,
 .linha-filtros,
 .item-filtro-situacao,
 .dropdown-situacao {
@@ -3306,4 +3307,237 @@ td{
 #graficoGerenciaForum {
     position: relative !important;
     z-index: 1 !important;
+}
+
+/* =========================================
+   AJUDA STAGE - DASHBOARD FINANCEIRO
+========================================= */
+
+.item-filtro-stage {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.btn-ajuda-stage {
+    width: 24px !important;
+    height: 24px !important;
+
+    border-radius: 50% !important;
+    border: 2px solid #1f3a5f !important;
+
+    background: #ffffff !important;
+    color: #1f3a5f !important;
+
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    line-height: 18px !important;
+
+    cursor: pointer !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,.22) !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.btn-ajuda-stage:hover {
+    background: #1f3a5f !important;
+    color: #ffffff !important;
+}
+
+/* Overlay */
+.overlay-ajuda-stage {
+    display: none;
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0,0,0,.25);
+
+    z-index: 90000;
+}
+
+/* Card flutuante */
+.card-ajuda-stage {
+    display: none;
+
+    position: fixed;
+    top: 92px;
+    right: 105px;
+
+    width: 360px;
+
+    background: #ffffff;
+    border: 2px solid #1f3a5f;
+    border-radius: 12px;
+
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+
+    z-index: 90001;
+
+    font-family: Arial, sans-serif;
+    color: #222;
+}
+
+/* Cabeçalho */
+.card-ajuda-stage-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #e60000;
+    color: #ffffff;
+
+    padding: 10px 14px;
+    border-radius: 9px 9px 0 0;
+}
+
+.card-ajuda-stage-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.card-ajuda-stage-header button {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+
+    font-size: 24px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+/* Conteúdo */
+.card-ajuda-stage-conteudo {
+    padding: 12px 14px;
+}
+
+.linha-stage-ajuda {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 6px 0;
+
+    border-bottom: 1px solid #eeeeee;
+}
+
+.linha-stage-ajuda:last-child {
+    border-bottom: none;
+}
+
+.linha-stage-ajuda p {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 15px;
+
+    text-align: left;
+}
+
+/* Bolhas L0-L5 */
+.bolha-stage {
+    width: 34px;
+    height: 34px;
+
+    min-width: 34px;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 12px;
+    font-weight: 900;
+
+    border: 2px solid #777;
+    color: #333;
+    background: #f4f4f4;
+}
+
+.stage-l0 {
+    background: #ffffff;
+    border-color: #bfbfbf;
+}
+
+.stage-l1 {
+    background: #eeeeee;
+    border-color: #a8a8a8;
+}
+
+.stage-l2 {
+    background: #d9d9d9;
+    border-color: #9a9a9a;
+}
+
+.stage-l3 {
+    background: #ffd6d6;
+    border-color: #d98a8a;
+}
+
+.stage-l4 {
+    background: #e60000;
+    border-color: #c00000;
+    color: #ffffff;
+}
+
+.stage-l5 {
+    background: #b00000;
+    border-color: #8a0000;
+    color: #ffffff;
+}
+
+/* =========================================
+   BOTÃO AJUDA STAGE AO LADO DO TÍTULO DO GRÁFICO
+========================================= */
+
+.titulo-grafico-financeiro-com-ajuda {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 12px !important;
+
+    width: auto !important;
+    margin: 0 auto 2px auto !important;
+
+    position: relative !important;
+}
+
+.btn-ajuda-stage-grafico {
+    width: 22px !important;
+    height: 22px !important;
+
+    min-width: 22px !important;
+
+    border-radius: 50% !important;
+    border: 2px solid #1f3a5f !important;
+
+    background: #ffffff !important;
+    color: #1f3a5f !important;
+
+    font-size: 13px !important;
+    font-weight: 900 !important;
+    line-height: 16px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    cursor: pointer !important;
+
+    box-shadow: 0 2px 5px rgba(0,0,0,.22) !important;
+
+    transform: translateY(-1px) !important;
+}
+
+.btn-ajuda-stage-grafico:hover {
+    background: #1f3a5f !important;
+    color: #ffffff !important;
 }

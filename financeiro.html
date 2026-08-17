@@ -103,8 +103,9 @@
                             </select>
                         </div>
 
-                        <div class="item-filtro">
+                        <div class="item-filtro item-filtro-stage">
                             <span>Stage:</span>
+
                             <select id="filtroStageFinanceiro">
                                 <option value="">Todos</option>
                             </select>
@@ -155,8 +156,17 @@
     <!-- GRÁFICO CENTRAL -->
     <div class="grafico-financeiro-box">
 
-        <div class="titulo-grafico-financeiro">
-            Meta x Realizado + FCST
+        <div class="titulo-grafico-financeiro titulo-grafico-financeiro-com-ajuda">
+            <span>Meta x Realizado + FCST</span>
+
+            <button 
+                type="button" 
+                class="btn-ajuda-stage btn-ajuda-stage-grafico" 
+                onclick="abrirAjudaStage()" 
+                title="Significado dos Stages"
+            >
+                ?
+            </button>
         </div>
 
         <canvas id="graficoFinanceiro"></canvas>
@@ -291,6 +301,49 @@
         });
     });
 </script>
+
+<div id="overlayAjudaStage" class="overlay-ajuda-stage" onclick="fecharAjudaStage()"></div>
+
+<div id="cardAjudaStage" class="card-ajuda-stage">
+    <div class="card-ajuda-stage-header">
+        <h3>Significado dos Stages</h3>
+        <button type="button" onclick="fecharAjudaStage()">×</button>
+    </div>
+
+    <div class="card-ajuda-stage-conteudo">
+
+        <div class="linha-stage-ajuda">
+            <span class="bolha-stage stage-l0">L0</span>
+            <p><strong>Ideação não validada com área</strong></p>
+        </div>
+
+        <div class="linha-stage-ajuda">
+            <span class="bolha-stage stage-l1">L1</span>
+            <p><strong>Iniciativa identificada</strong></p>
+        </div>
+
+        <div class="linha-stage-ajuda">
+            <span class="bolha-stage stage-l2">L2</span>
+            <p><strong>Iniciativa validada</strong></p>
+        </div>
+
+        <div class="linha-stage-ajuda">
+            <span class="bolha-stage stage-l3">L3</span>
+            <p><strong>Iniciativa aprovada</strong></p>
+        </div>
+
+        <div class="linha-stage-ajuda">
+            <span class="bolha-stage stage-l4">L4</span>
+            <p><strong>Iniciativa implantada</strong></p>
+        </div>
+
+        <div class="linha-stage-ajuda">
+            <span class="bolha-stage stage-l5">L5</span>
+            <p><strong>Ganho capturado</strong></p>
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>

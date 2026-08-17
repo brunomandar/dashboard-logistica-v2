@@ -660,6 +660,14 @@ const classePrioridade = (prioridade) => {
         return item.Status;
     }
 
+    if (
+        campoNormalizado === "DATA FIM" ||
+        campoNormalizado === "DATAFIM" ||
+        campoNormalizado === "PRAZO"
+    ) {
+        return formatarDataBR(item["Data Fim"]);
+    }
+
     if (campoNormalizado === "PRIORIDADE") {
         return item.Prioridade;
     }
@@ -679,7 +687,15 @@ const linhaContemPesquisa = (item, termo) => {
         .map(p => p.trim())
         .filter(Boolean);
 
-    const textoLinha = [
+    /*
+      Pesquisa somente nas colunas visíveis da tabela Demandas:
+      ID, Demanda, Gerente, Coordenador, PMO Responsável, Fórum,
+      Status Geral, Status, Data Fim e Prioridade.
+
+      Não pesquisa em Ações, Responsável, Status Ação ou Prazo da Ação,
+      porque esses campos não aparecem nesta tabela e geravam falsos positivos.
+    */
+    const textoLinhaVisivel = [
         item.ID,
         item.Projeto,
         item.Gerente,
@@ -688,13 +704,8 @@ const linhaContemPesquisa = (item, termo) => {
         item.Forum,
         item["Status Geral"],
         item.Status,
-        item["Data Fim"],
-        item.Prioridade,
-        item.RE,
-        item["Ações"],
-        item["Responsável"],
-        item["Status Ação"],
-        item["Prazo da Ação"]
+        formatarDataBR(item["Data Fim"]),
+        item.Prioridade
     ]
         .map(valor => normalizar(valor))
         .join(" ");
@@ -717,7 +728,15 @@ const linhaContemPesquisa = (item, termo) => {
             .map(p => p.trim())
             .filter(Boolean);
 
-        return palavras.every(palavra => textoLinha.includes(palavra));
+        /*
+          Regra:
+          - Se digitar uma palavra, a linha precisa conter essa palavra.
+          - Se digitar mais de uma palavra, a linha precisa conter todas as palavras.
+          Exemplo:
+          "torre de controle" só retorna linhas que contenham TORRE, DE e CONTROLE
+          em alguma coluna visível da tabela.
+        */
+        return palavras.every(palavra => textoLinhaVisivel.includes(palavra));
     });
 };
 
@@ -748,7 +767,6 @@ const ehConcluido = (item) => {
     return (
         statusGeral === "CONCLUIDO" ||
         statusGeral === "CONCLUÍDO" ||
-        statusGeral === "ENCERRADO" ||
         statusPrazo === "CONCLUIDO" ||
         statusPrazo === "CONCLUÍDO"
     );
@@ -1333,7 +1351,7 @@ function carregarAcoes() {
             };
 
             const obterCampoPesquisaAcoes = (item, campo) => {
-    const campoNormalizado = normalizar(campo);
+                const campoNormalizado = normalizar(campo);
 
     if (campoNormalizado === "ID") {
         return item.ID;
@@ -1345,24 +1363,6 @@ function carregarAcoes() {
         campoNormalizado === "DEMANDAS"
     ) {
         return item.Projeto;
-    }
-
-    if (campoNormalizado === "GERENTE") {
-        return item.Gerente;
-    }
-
-    if (
-        campoNormalizado === "FORUM" ||
-        campoNormalizado === "FÓRUM"
-    ) {
-        return item.Forum;
-    }
-
-    if (
-        campoNormalizado === "STATUS GERAL" ||
-        campoNormalizado === "STATUSGERAL"
-    ) {
-        return item["Status Geral"];
     }
 
     if (
@@ -1389,7 +1389,7 @@ function carregarAcoes() {
         campoNormalizado === "PRAZO DA ACAO" ||
         campoNormalizado === "PRAZO DA AÇÃO"
     ) {
-        return item["Prazo da Ação"];
+        return formatarDataBR(item["Prazo da Ação"]);
     }
 
     if (campoNormalizado === "COORDENADOR") {
@@ -1404,10 +1404,6 @@ function carregarAcoes() {
         return obterPMOResponsavel(item);
     }
 
-    if (campoNormalizado === "RE") {
-        return item.RE;
-    }
-
     return "";
 };
 
@@ -1419,18 +1415,22 @@ const linhaContemPesquisaAcoes = (item, termo) => {
         .map(p => p.trim())
         .filter(Boolean);
 
-    const textoLinha = [
+    /*
+      Pesquisa somente nas colunas visíveis da tabela Ações:
+      ID, Demanda, Status Ação, Ações, Prazo da Ação,
+      Coordenador e PMO Responsável.
+
+      Não pesquisa em Gerente, Fórum, Status Geral ou RE,
+      porque esses campos não aparecem nesta tabela.
+    */
+    const textoLinhaVisivel = [
         item.ID,
         item.Projeto,
-        item.Gerente,
-        item.Forum,
-        item["Status Geral"],
         item["Status Ação"],
         item["Ações"],
-        item["Prazo da Ação"],
+        formatarDataBR(item["Prazo da Ação"]),
         obterCoordenador(item),
-        obterPMOResponsavel(item),
-        item.RE
+        obterPMOResponsavel(item)
     ]
         .map(valor => normalizar(valor))
         .join(" ");
@@ -1453,7 +1453,15 @@ const linhaContemPesquisaAcoes = (item, termo) => {
             .map(p => p.trim())
             .filter(Boolean);
 
-        return palavras.every(palavra => textoLinha.includes(palavra));
+        /*
+          Regra:
+          - Uma palavra: precisa existir na linha visível.
+          - Várias palavras: todas precisam existir na linha visível.
+          Exemplo:
+          "apuracao maio" só retorna linhas que tenham APURACAO e MAIO
+          em alguma coluna visível da tabela.
+        */
+        return palavras.every(palavra => textoLinhaVisivel.includes(palavra));
     });
 };
 
@@ -2661,6 +2669,22 @@ function ajustarEscalaDashboard() {
       Se ficar muito para a esquerda, reduza para -20px.
     */
     canvas.style.setProperty("--dashboard-shift-x", "-35px");
+}
+
+function abrirAjudaStage() {
+    const overlay = document.getElementById("overlayAjudaStage");
+    const card = document.getElementById("cardAjudaStage");
+
+    if (overlay) overlay.style.display = "block";
+    if (card) card.style.display = "block";
+}
+
+function fecharAjudaStage() {
+    const overlay = document.getElementById("overlayAjudaStage");
+    const card = document.getElementById("cardAjudaStage");
+
+    if (overlay) overlay.style.display = "none";
+    if (card) card.style.display = "none";
 }
 
 function abrirAjudaDashboard() {
