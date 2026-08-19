@@ -1333,14 +1333,7 @@ scales: {
                 <td>${obterCoordenador(item)}</td>
                 <td>${obterPMOResponsavel(item)}</td>
                 <td>${item.Forum ?? ""}</td>
-                <td
-    class="${normalizar(item["Status Geral"]) === "CANCELADO" ? "celula-cancelada-tooltip" : ""}"
-    title="${normalizar(item["Status Geral"]) === "CANCELADO" ? escaparAtributoHtml(obterJustificativaCancelamento(item)) : ""}"
->
-    ${item["Status Geral"] ?? ""}
-</td>
-
-<td 
+                <td 
     class="${normalizar(item.Status) === "CANCELADO" ? "celula-cancelada-tooltip" : ""}"
     title="${normalizar(item.Status) === "CANCELADO" ? escaparAtributoHtml(obterJustificativaCancelamento(item)) : ""}"
 >

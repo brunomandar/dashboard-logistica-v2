@@ -2052,6 +2052,10 @@ td{
 
     font-size: 14px;
     font-weight: 400;
+
+    position: relative !important;
+    z-index: 300 !important;
+    pointer-events: auto !important;
 }
 
 .linha-pesquisa-demandas input{
