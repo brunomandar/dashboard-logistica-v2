@@ -27,6 +27,53 @@ function extrairNumeroLog(id) {
     return parseInt(match[1], 10);
 }
 
+function obterProblemaOportunidade(item) {
+    return (
+        item["Problema (Oportunidade)"] ??
+        item["Problema/Oportunidade"] ??
+        item["Problema Oportunidade"] ??
+        item["Problema"] ??
+        item["Oportunidade"] ??
+        ""
+    );
+}
+
+function obterBeneficioQuantitativo(item) {
+    return (
+        item["Benefício Quantitativo"] ??
+        item["Beneficio Quantitativo"] ??
+        item["Benef. Quantitativo"] ??
+        item["Benef Quantitativo"] ??
+        ""
+    );
+}
+
+function obterBeneficioQualitativo(item) {
+    return (
+        item["Benefício Qualitativo"] ??
+        item["Beneficio Qualitativo"] ??
+        item["Benef. Qualitativo"] ??
+        item["Benef Qualitativo"] ??
+        ""
+    );
+}
+
+function formatarTextoTabelaDemanda(valor) {
+    if (valor === null || valor === undefined) return "";
+
+    return valor
+        .toString()
+        .replace(/_x000D_/g, "\n")
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "'")
+        .replace(/\n+/g, "<br>");
+}
+
 function obterPMOResponsavel(item) {
     return (
         item["PMO Responsável"] ??
@@ -261,6 +308,21 @@ function aplicarOrdenacaoTabelaProjetos(lista) {
         if (coluna === "Projeto") {
             valorA = a.Projeto || "";
             valorB = b.Projeto || "";
+        }
+
+        else if (coluna === "Problema (Oportunidade)") {
+            valorA = obterProblemaOportunidade(a);
+            valorB = obterProblemaOportunidade(b);
+        }
+
+        else if (coluna === "Benefício Quantitativo") {
+            valorA = obterBeneficioQuantitativo(a);
+            valorB = obterBeneficioQuantitativo(b);
+        }
+
+        else if (coluna === "Benefício Qualitativo") {
+            valorA = obterBeneficioQualitativo(a);
+            valorB = obterBeneficioQualitativo(b);
         }
 
         else if (coluna === "Gerente") {
@@ -626,6 +688,33 @@ const classePrioridade = (prioridade) => {
         return item.Projeto;
     }
 
+    if (
+    campoNormalizado === "PROBLEMA" ||
+    campoNormalizado === "OPORTUNIDADE" ||
+    campoNormalizado === "PROBLEMA OPORTUNIDADE" ||
+    campoNormalizado === "PROBLEMA (OPORTUNIDADE)"
+    ) {
+        return obterProblemaOportunidade(item);
+    }
+
+    if (
+    campoNormalizado === "BENEFICIO QUANTITATIVO" ||
+    campoNormalizado === "BENEFÍCIO QUANTITATIVO" ||
+    campoNormalizado === "BENEF QUANT" ||
+    campoNormalizado === "BENEF. QUANT"
+    ) {
+        return obterBeneficioQuantitativo(item);
+    }
+
+    if (
+    campoNormalizado === "BENEFICIO QUALITATIVO" ||
+    campoNormalizado === "BENEFÍCIO QUALITATIVO" ||
+    campoNormalizado === "BENEF QUAL" ||
+    campoNormalizado === "BENEF. QUAL"
+    ) {
+        return obterBeneficioQualitativo(item);
+    }
+
     if (campoNormalizado === "GERENTE") {
         return item.Gerente;
     }
@@ -698,6 +787,9 @@ const linhaContemPesquisa = (item, termo) => {
     const textoLinhaVisivel = [
         item.ID,
         item.Projeto,
+        obterProblemaOportunidade(item),
+        obterBeneficioQuantitativo(item),
+        obterBeneficioQualitativo(item),
         item.Gerente,
         obterCoordenador(item),
         obterPMOResponsavel(item),
@@ -1234,6 +1326,9 @@ scales: {
             <tr>
                 <td>${item.ID ?? ""}</td>
                 <td>${item.Projeto ?? ""}</td>
+                <td class="celula-texto-longo-demanda">${formatarTextoTabelaDemanda(obterProblemaOportunidade(item))}</td>
+                <td class="celula-texto-longo-demanda">${formatarTextoTabelaDemanda(obterBeneficioQuantitativo(item))}</td>
+                <td class="celula-texto-longo-demanda">${formatarTextoTabelaDemanda(obterBeneficioQualitativo(item))}</td>
                 <td>${item.Gerente ?? ""}</td>
                 <td>${obterCoordenador(item)}</td>
                 <td>${obterPMOResponsavel(item)}</td>
