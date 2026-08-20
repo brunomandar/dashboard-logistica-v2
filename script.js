@@ -2,6 +2,186 @@ let filtroCardProjeto = "";
 let filtroCard = "";
 let projetosCache = [];
 
+const COLUNAS_TABELA_DEMANDAS = [
+    {
+        id: "id",
+        titulo: "ID",
+        ordenacao: "ID",
+        peso: 0.7,
+        minimo: 60,
+        valorTexto: item => item.ID ?? "",
+        valorHtml: item => item.ID ?? ""
+    },
+    {
+        id: "demanda",
+        titulo: "Demanda",
+        ordenacao: "Projeto",
+        peso: 2.8,
+        minimo: 230,
+        valorTexto: item => item.Projeto ?? "",
+        valorHtml: item => item.Projeto ?? ""
+    },
+    {
+        id: "problema",
+        titulo: "Ações em execução",
+        ordenacao: "Problema / Oportunidade",
+        peso: 2.2,
+        minimo: 210,
+        classe: "celula-texto-longo-demanda",
+        valorTexto: item => obterProblemaOportunidade(item),
+        valorHtml: item =>
+            formatarTextoTabelaDemanda(
+                obterProblemaOportunidade(item)
+            )
+    },
+    {
+        id: "beneficioQualitativo",
+        titulo: "Benef. Qual.",
+        ordenacao: "Benefício Qualitativo",
+        peso: 2.4,
+        minimo: 230,
+        classe: "celula-texto-longo-demanda",
+        valorTexto: item => obterBeneficioQualitativo(item),
+        valorHtml: item =>
+            formatarTextoTabelaDemanda(
+                obterBeneficioQualitativo(item)
+            )
+    },
+    {
+        id: "beneficioQuantitativo",
+        titulo: "Benef. 12 Meses",
+        ordenacao: "Benefício Quantitativo",
+        peso: 1.3,
+        minimo: 135,
+        classe: "celula-texto-longo-demanda",
+        valorTexto: item => obterBeneficioQuantitativo(item),
+        valorHtml: item =>
+            formatarNumeroDemanda(
+                obterBeneficioQuantitativo(item)
+            )
+    },
+    {
+        id: "beneficio2026",
+        titulo: "Benefício 2026",
+        ordenacao: "Benefício 2026",
+        peso: 1.3,
+        minimo: 135,
+        classe: "celula-texto-longo-demanda",
+        valorTexto: item => obterBeneficio2026(item),
+        valorHtml: item =>
+            formatarNumeroDemanda(
+                obterBeneficio2026(item)
+            )
+    },
+    {
+        id: "realizadoFcstDemanda",
+        titulo: "Realizado + FCST",
+        ordenacao: "Realizado + FCST",
+        peso: 1.4,
+    	minimo: 145,
+    	classe: "celula-texto-longo-demanda",
+    	valorTexto: item => obterRealizadoFcstDemanda(item),
+    	valorHtml: item =>
+            formatarNumeroDemanda(
+                obterRealizadoFcstDemanda(item)
+            )
+    },
+    {
+    	id: "eficienciaDemanda",
+    	titulo: "Eficiência",
+    	ordenacao: "Eficiência",
+    	peso: 1.0,
+    	minimo: 105,
+    	classe: "celula-texto-longo-demanda",
+    	valorTexto: item => obterEficienciaDemanda(item),
+    	valorHtml: item =>
+            formatarNumeroDemanda(
+                 obterEficienciaDemanda(item)
+            )
+    },
+    {
+    	id: "periodoCapturaDemanda",
+    	titulo: "Período Captura",
+    	ordenacao: "Período Captura",
+    	peso: 1.3,
+    	minimo: 135,
+    	classe: "celula-texto-longo-demanda",
+    	valorTexto: item => obterPeriodoCapturaDemanda(item),
+    	valorHtml: item =>
+            formatarTextoTabelaDemanda(
+                 obterPeriodoCapturaDemanda(item)
+            )
+    },
+    {
+        id: "gerente",
+        titulo: "Gerente",
+        ordenacao: "Gerente",
+        peso: 1.1,
+        minimo: 115,
+        valorTexto: item => item.Gerente ?? "",
+        valorHtml: item => item.Gerente ?? ""
+    },
+    {
+        id: "coordenador",
+        titulo: "Coordenador",
+        ordenacao: "Coordenador",
+        peso: 1.35,
+        minimo: 145,
+        valorTexto: item => obterCoordenador(item),
+        valorHtml: item => obterCoordenador(item)
+    },
+    {
+        id: "pmo",
+        titulo: "PMO Respons.",
+        ordenacao: "PMO Responsável",
+        peso: 1.4,
+        minimo: 150,
+        valorTexto: item => obterPMOResponsavel(item),
+        valorHtml: item => obterPMOResponsavel(item)
+    },
+    {
+        id: "forum",
+        titulo: "Fórum",
+        ordenacao: "Forum",
+        peso: 1.2,
+        minimo: 130,
+        valorTexto: item => item.Forum ?? "",
+        valorHtml: item => item.Forum ?? ""
+    },
+    {
+        id: "status",
+        titulo: "Status",
+        ordenacao: "Status",
+        peso: 0.9,
+        minimo: 95,
+        valorTexto: item => item.Status ?? "",
+        valorHtml: item => item.Status ?? ""
+    },
+    {
+        id: "dataFim",
+        titulo: "Data Fim",
+        ordenacao: "Data Fim",
+        peso: 0.9,
+        minimo: 90,
+        valorTexto: item => formatarDataBR(item["Data Fim"]),
+        valorHtml: item => formatarDataBR(item["Data Fim"])
+    },
+    {
+        id: "prioridade",
+        titulo: "Prioridade",
+        ordenacao: "Prioridade",
+        peso: 0.9,
+        minimo: 95,
+        valorTexto: item => item.Prioridade ?? "",
+        valorHtml: item => `
+            <span class="prioridade-com-bolinha">
+                <span class="bolinha-prioridade ${classePrioridadeGlobal(item.Prioridade)}"></span>
+                ${item.Prioridade ?? ""}
+            </span>
+        `
+    }
+];
+
 let ordenacaoTabelaProjetos = {
     coluna: "ID",
     direcao: "asc"
@@ -58,6 +238,44 @@ function obterBeneficioQualitativo(item) {
     );
 }
 
+function obterBeneficio2026(item) {
+    return (
+        item["Benefício 2026"] ??
+        item["Beneficio 2026"] ??
+        item["Benef. 2026"] ??
+        item["Benef 2026"] ??
+        ""
+    );
+}
+
+function obterRealizadoFcstDemanda(item) {
+    return (
+        item["Realizado + FCST"] ??
+        item["Realizado+FCST"] ??
+        item["Realizado+ FCST"] ??
+        item["Realizado FCST"] ??
+        ""
+    );
+}
+
+function obterEficienciaDemanda(item) {
+    return (
+        item["Eficiência"] ??
+        item["Eficiencia"] ??
+        ""
+    );
+}
+
+function obterPeriodoCapturaDemanda(item) {
+    return (
+        item["Período Captura"] ??
+        item["Periodo Captura"] ??
+        item["Período de Captura"] ??
+        item["Periodo de Captura"] ??
+        ""
+    );
+}
+
 function formatarTextoTabelaDemanda(valor) {
     if (valor === null || valor === undefined) return "";
 
@@ -72,6 +290,66 @@ function formatarTextoTabelaDemanda(valor) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "'")
         .replace(/\n+/g, "<br>");
+}
+
+function formatarNumeroDemanda(valor) {
+    if (
+        valor === null ||
+        valor === undefined ||
+        valor === ""
+    ) {
+        return "";
+    }
+
+    /*
+      Mantém textos que não são números:
+      N/A, (N/A), -, #VALOR!, entre outros.
+    */
+    if (typeof valor === "string") {
+        const texto = valor.trim();
+
+        if (
+            texto === "" ||
+            texto === "-" ||
+            texto.toUpperCase() === "N/A" ||
+            texto.toUpperCase() === "(N/A)" ||
+            texto.startsWith("#")
+        ) {
+            return texto;
+        }
+
+        /*
+          Aceita tanto:
+          2.39
+          quanto:
+          2,39
+        */
+        const textoNumerico = texto
+            .replace(/\s/g, "")
+            .replace(",", ".");
+
+        const numeroConvertido = Number(textoNumerico);
+
+        if (isNaN(numeroConvertido)) {
+            return texto;
+        }
+
+        return numeroConvertido.toLocaleString("pt-BR", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    const numero = Number(valor);
+
+    if (isNaN(numero)) {
+        return valor.toString();
+    }
+
+    return numero.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
 }
 
 function obterPMOResponsavel(item) {
@@ -318,6 +596,26 @@ function aplicarOrdenacaoTabelaProjetos(lista) {
         else if (coluna === "Benefício Quantitativo") {
             valorA = obterBeneficioQuantitativo(a);
             valorB = obterBeneficioQuantitativo(b);
+        }
+
+        else if (coluna === "Benefício 2026") {
+            valorA = obterBeneficio2026(a);
+            valorB = obterBeneficio2026(b);
+        }
+
+        else if (coluna === "Realizado + FCST") {
+            valorA = obterRealizadoFcstDemanda(a);
+            valorB = obterRealizadoFcstDemanda(b);
+        }
+
+        else if (coluna === "Eficiência") {
+            valorA = obterEficienciaDemanda(a);
+            valorB = obterEficienciaDemanda(b);
+        }
+
+        else if (coluna === "Período Captura") {
+            valorA = obterPeriodoCapturaDemanda(a);
+            valorB = obterPeriodoCapturaDemanda(b);
         }
 
         else if (coluna === "Benefício Qualitativo") {
@@ -704,6 +1002,39 @@ const classePrioridade = (prioridade) => {
     campoNormalizado === "BENEF. QUANT"
     ) {
         return obterBeneficioQuantitativo(item);
+    }
+
+    if (
+    campoNormalizado === "BENEFICIO 2026" ||
+    campoNormalizado === "BENEFÍCIO 2026" ||
+    campoNormalizado === "BENEF 2026" ||
+    campoNormalizado === "BENEF. 2026"
+    ) {
+        return obterBeneficio2026(item);
+    }
+
+    if (
+    campoNormalizado === "REALIZADO" ||
+    campoNormalizado === "REALIZADO FCST" ||
+    campoNormalizado === "REALIZADO + FCST"
+    ) {
+        return obterRealizadoFcstDemanda(item);
+    }
+
+    if (
+    campoNormalizado === "EFICIENCIA" ||
+    campoNormalizado === "EFICIÊNCIA"
+    ) {
+        return obterEficienciaDemanda(item);
+    }
+
+    if (
+    campoNormalizado === "PERIODO CAPTURA" ||
+    campoNormalizado === "PERÍODO CAPTURA" ||
+    campoNormalizado === "PERIODO DE CAPTURA" ||
+    campoNormalizado === "PERÍODO DE CAPTURA"
+    ) {
+        return obterPeriodoCapturaDemanda(item);
     }
 
     if (
@@ -1319,36 +1650,12 @@ scales: {
 
     listaFiltrada = aplicarOrdenacaoTabelaProjetos(listaFiltrada);
 
-    const tabela = document.querySelector("#tabelaProjetos tbody");
+    const colunasVisiveis = obterColunasDemandasVisiveis();
 
-    if (tabela) {
-        tabela.innerHTML = listaFiltrada.map(item => `
-            <tr>
-                <td>${item.ID ?? ""}</td>
-                <td>${item.Projeto ?? ""}</td>
-                <td class="celula-texto-longo-demanda">${formatarTextoTabelaDemanda(obterProblemaOportunidade(item))}</td>
-                <td class="celula-texto-longo-demanda">${formatarTextoTabelaDemanda(obterBeneficioQuantitativo(item))}</td>
-                <td class="celula-texto-longo-demanda">${formatarTextoTabelaDemanda(obterBeneficioQualitativo(item))}</td>
-                <td>${item.Gerente ?? ""}</td>
-                <td>${obterCoordenador(item)}</td>
-                <td>${obterPMOResponsavel(item)}</td>
-                <td>${item.Forum ?? ""}</td>
-                <td 
-    class="${normalizar(item.Status) === "CANCELADO" ? "celula-cancelada-tooltip" : ""}"
-    title="${normalizar(item.Status) === "CANCELADO" ? escaparAtributoHtml(obterJustificativaCancelamento(item)) : ""}"
->
-    ${item.Status ?? ""}
-</td>
-                <td>${formatarDataBR(item["Data Fim"])}</td>
-                <td>
-                <span class="prioridade-com-bolinha">
-                    <span class="bolinha-prioridade ${classePrioridade(item.Prioridade)}"></span>
-                    ${item.Prioridade ?? ""}
-                </span>
-            </td>
-            </tr>
-        `).join("");
-    }
+    montarCabecalhoTabelaDemandas(colunasVisiveis);
+    montarLinhasTabelaDemandas(listaFiltrada, colunasVisiveis);
+    ajustarLarguraTabelaDemandas(colunasVisiveis);
+
 }
 
 // =============================
@@ -1855,6 +2162,450 @@ function formatarTextoAcoes(valor) {
     );
 
     return texto.replace(/^<br>/, "");
+}
+
+function normalizarTextoGlobal(valor) {
+    return (valor || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toUpperCase();
+}
+
+function classePrioridadeGlobal(prioridade) {
+    const valor = normalizarTextoGlobal(prioridade);
+
+    if (valor === "P0") return "p0";
+    if (valor === "P1") return "p1";
+    if (valor === "P2") return "p2";
+
+    return "";
+}
+
+function obterColunasDemandasVisiveis() {
+    let selecionadasSalvas = null;
+
+    try {
+        selecionadasSalvas = JSON.parse(
+            localStorage.getItem("colunasDemandasVisiveis") || "null"
+        );
+    } catch (erro) {
+        console.warn(
+            "Preferência de colunas inválida. Aplicando todas as colunas.",
+            erro
+        );
+
+        localStorage.removeItem("colunasDemandasVisiveis");
+    }
+
+    /*
+      Se não existir preferência válida, todas as colunas
+      começam selecionadas.
+    */
+    if (
+        !Array.isArray(selecionadasSalvas) ||
+        selecionadasSalvas.length === 0
+    ) {
+        return [...COLUNAS_TABELA_DEMANDAS];
+    }
+
+    return COLUNAS_TABELA_DEMANDAS.filter(coluna =>
+        selecionadasSalvas.includes(coluna.id)
+    );
+}
+function configurarSeletorColunasDemandas() {
+    const seletor = document.getElementById(
+        "seletorColunasDemandas"
+    );
+
+    const botao = document.getElementById(
+        "btnSeletorColunas"
+    );
+
+    const menu = document.getElementById(
+        "menuSeletorColunas"
+    );
+
+    const checks = document.querySelectorAll(
+        ".check-coluna-demanda"
+    );
+
+    const btnTodas = document.getElementById(
+        "btnSelecionarTodasColunas"
+    );
+
+    if (
+        !seletor ||
+        !botao ||
+        !menu ||
+        checks.length === 0
+    ) {
+        return;
+    }
+
+    let salvas = null;
+
+    try {
+        salvas = JSON.parse(
+            localStorage.getItem(
+                "colunasDemandasVisiveis"
+            ) || "null"
+        );
+    } catch (erro) {
+        console.warn(
+            "Não foi possível ler as colunas salvas.",
+            erro
+        );
+
+        localStorage.removeItem(
+            "colunasDemandasVisiveis"
+        );
+    }
+
+    /*
+      Se houver preferência salva, aplica a preferência.
+      Caso contrário, todas começam selecionadas.
+    */
+    if (Array.isArray(salvas) && salvas.length > 0) {
+        checks.forEach(check => {
+            check.checked = salvas.includes(
+                check.value
+            );
+        });
+    } else {
+        checks.forEach(check => {
+            check.checked = true;
+        });
+
+        salvarColunasDemandasSelecionadas();
+    }
+
+    /*
+      Abre e fecha o menu.
+    */
+    botao.addEventListener("click", event => {
+        event.stopPropagation();
+        seletor.classList.toggle("aberto");
+    });
+
+    /*
+      Impede que selecionar uma opção feche o menu.
+    */
+    menu.addEventListener("click", event => {
+        event.stopPropagation();
+    });
+
+    /*
+      Alteração individual das colunas.
+    */
+    checks.forEach(check => {
+        check.addEventListener("change", () => {
+            const quantidadeMarcada = [...checks]
+                .filter(item => item.checked)
+                .length;
+
+            /*
+              Nenhuma coluna específica fica travada,
+              mas a tabela não pode ficar sem nenhuma coluna.
+            */
+            if (quantidadeMarcada === 0) {
+                check.checked = true;
+                return;
+            }
+
+            salvarColunasDemandasSelecionadas();
+            atualizarTextoBotaoColunas();
+            carregarDashboard();
+        });
+    });
+
+    /*
+      BOTÃO TODAS:
+      marca todas as colunas e atualiza a tabela.
+    */
+    if (btnTodas) {
+        btnTodas.addEventListener("click", event => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            checks.forEach(check => {
+                check.checked = true;
+            });
+
+            salvarColunasDemandasSelecionadas();
+            atualizarTextoBotaoColunas();
+            carregarDashboard();
+        });
+    }
+
+    /*
+      Fecha o menu somente ao selecionar fora dele.
+    */
+    document.addEventListener("click", event => {
+        if (!seletor.contains(event.target)) {
+            seletor.classList.remove("aberto");
+        }
+    });
+
+    atualizarTextoBotaoColunas();
+}
+
+function salvarColunasDemandasSelecionadas() {
+    const selecionadas = [
+        ...document.querySelectorAll(".check-coluna-demanda:checked")
+    ].map(check => check.value);
+
+    localStorage.setItem(
+        "colunasDemandasVisiveis",
+        JSON.stringify(selecionadas)
+    );
+}
+
+function atualizarTextoBotaoColunas() {
+    const botao = document.getElementById("btnSeletorColunas");
+    const checks = document.querySelectorAll(".check-coluna-demanda");
+    const quantidadeSelecionada = [...checks]
+        .filter(check => check.checked)
+        .length;
+
+    if (!botao) return;
+
+    botao.textContent = `Colunas (${quantidadeSelecionada}) ▾`;
+}
+
+function montarCabecalhoTabelaDemandas(colunasVisiveis) {
+    const cabecalho = document.getElementById("cabecalhoTabelaProjetos");
+
+    if (!cabecalho) return;
+
+    cabecalho.innerHTML = colunasVisiveis
+        .map(coluna => `
+            <th
+                data-coluna="${coluna.id}"
+                onclick="ordenarTabelaProjetos('${coluna.ordenacao}')"
+            >
+                ${coluna.titulo}
+            </th>
+        `)
+        .join("");
+}
+
+function montarLinhasTabelaDemandas(lista, colunasVisiveis) {
+    const tabela = document.querySelector("#tabelaProjetos tbody");
+
+    if (!tabela) return;
+
+    tabela.innerHTML = lista.map(item => {
+        const celulas = colunasVisiveis.map(coluna => {
+            const classe = coluna.classe || "";
+
+            return `
+                <td
+                    class="${classe}"
+                    data-coluna="${coluna.id}"
+                >
+                    ${coluna.valorHtml(item)}
+                </td>
+            `;
+        }).join("");
+
+        return `<tr>${celulas}</tr>`;
+    }).join("");
+}
+
+function ajustarLarguraTabelaDemandas(colunasVisiveis) {
+    const tabela = document.getElementById("tabelaProjetos");
+
+    const container =
+        document.querySelector(".tabela-demandas-layout") ||
+        tabela?.closest(".tabela-container");
+
+    if (
+        !tabela ||
+        !container ||
+        !Array.isArray(colunasVisiveis) ||
+        colunasVisiveis.length === 0
+    ) {
+        return;
+    }
+
+    /*
+      Largura visual disponível para a tabela.
+    */
+    const larguraContainer = container.clientWidth;
+
+    /*
+      Soma das larguras mínimas definidas no array
+      COLUNAS_TABELA_DEMANDAS.
+    */
+    const larguraMinimaCalculada = colunasVisiveis.reduce(
+        (total, coluna) => {
+            return total + Number(coluna.minimo || 120);
+        },
+        0
+    );
+
+    /*
+      Pequena folga para bordas e arredondamentos.
+    */
+    const larguraNecessaria =
+        larguraMinimaCalculada +
+        (colunasVisiveis.length * 3);
+
+    /*
+      REGRA CORRETA:
+
+      Se todas as colunas couberem no container:
+      - tabela ocupa 100%;
+      - colunas dividem todo o espaço disponível;
+      - não aparece área cinza;
+      - não aparece barra horizontal.
+
+      Se não couberem:
+      - tabela cresce horizontalmente;
+      - mantém as larguras mínimas;
+      - aparece barra horizontal.
+    */
+    const colunasCabemNoContainer =
+        larguraNecessaria <= larguraContainer;
+
+    if (colunasCabemNoContainer) {
+        tabela.classList.add("tabela-distribuida");
+        tabela.classList.remove("tabela-com-scroll");
+
+        tabela.style.setProperty(
+            "width",
+            "100%",
+            "important"
+        );
+
+        tabela.style.setProperty(
+            "min-width",
+            "100%",
+            "important"
+        );
+
+        tabela.style.setProperty(
+            "max-width",
+            "100%",
+            "important"
+        );
+
+        tabela.style.setProperty(
+            "table-layout",
+            "fixed",
+            "important"
+        );
+
+        container.style.setProperty(
+            "overflow-x",
+            "hidden",
+            "important"
+        );
+    } else {
+        tabela.classList.remove("tabela-distribuida");
+        tabela.classList.add("tabela-com-scroll");
+
+        tabela.style.setProperty(
+            "width",
+            `${larguraNecessaria}px`,
+            "important"
+        );
+
+        tabela.style.setProperty(
+            "min-width",
+            `${larguraNecessaria}px`,
+            "important"
+        );
+
+        tabela.style.setProperty(
+            "max-width",
+            `${larguraNecessaria}px`,
+            "important"
+        );
+
+        tabela.style.setProperty(
+            "table-layout",
+            "fixed",
+            "important"
+        );
+
+        container.style.setProperty(
+            "overflow-x",
+            "auto",
+            "important"
+        );
+    }
+
+    aplicarLargurasColunasDemandas(
+        colunasVisiveis
+    );
+}
+
+function aplicarLargurasColunasDemandas(colunasVisiveis) {
+    const tabela = document.getElementById("tabelaProjetos");
+
+    if (!tabela) return;
+
+    const tabelaDistribuida =
+        tabela.classList.contains("tabela-distribuida");
+
+    const totalPeso = colunasVisiveis.reduce(
+        (total, coluna) => total + coluna.peso,
+        0
+    );
+
+    colunasVisiveis.forEach(coluna => {
+        const celulas = tabela.querySelectorAll(
+            `[data-coluna="${coluna.id}"]`
+        );
+
+        if (tabelaDistribuida) {
+            const percentual =
+                (coluna.peso / totalPeso) * 100;
+
+            celulas.forEach(celula => {
+                celula.style.setProperty(
+                    "width",
+                    `${percentual}%`,
+                    "important"
+                );
+
+                celula.style.setProperty(
+                    "min-width",
+                    "0px",
+                    "important"
+                );
+
+                celula.style.setProperty(
+                    "max-width",
+                    "none",
+                    "important"
+                );
+            });
+        } else {
+            celulas.forEach(celula => {
+                celula.style.setProperty(
+                    "width",
+                    `${coluna.minimo}px`,
+                    "important"
+                );
+
+                celula.style.setProperty(
+                    "min-width",
+                    `${coluna.minimo}px`,
+                    "important"
+                );
+
+                celula.style.setProperty(
+                    "max-width",
+                    `${coluna.minimo}px`,
+                    "important"
+                );
+            });
+        }
+    });
 }
 
 let financeiroCache = [];
@@ -2672,6 +3423,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ✅ PROJETOS (Só roda se estiver na tela de projetos)
     if (document.getElementById("filtroGerente")) {
+        configurarSeletorColunasDemandas();
         carregarFiltrosProjetos();
 
         document.getElementById("filtroGerente").addEventListener("change", carregarDashboard);
@@ -2807,7 +3559,14 @@ function fecharAjudaAcoes() {
     if (card) card.style.display = "none";
 }
 
-window.addEventListener("resize", ajustarEscalaDashboard);
+window.addEventListener("resize", function () {
+    ajustarEscalaDashboard();
+
+    if (document.getElementById("tabelaProjetos")) {
+        const colunasVisiveis = obterColunasDemandasVisiveis();
+        ajustarLarguraTabelaDemandas(colunasVisiveis);
+    }
+});
 window.addEventListener("load", ajustarEscalaDashboard);
 
 setTimeout(ajustarEscalaDashboard, 300);

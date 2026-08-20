@@ -231,34 +231,138 @@
         >
         RE
     </label>
+
+<div class="seletor-colunas" id="seletorColunasDemandas">
+
+    <button
+        type="button"
+        class="btn-seletor-colunas"
+        id="btnSeletorColunas"
+        title="Escolher colunas da tabela"
+    >
+        Colunas ▾
+    </button>
+
+    <div class="menu-seletor-colunas" id="menuSeletorColunas">
+
+        <div class="menu-colunas-topo">
+            <strong>Colunas visíveis</strong>
+
+            <button
+                type="button"
+                id="btnSelecionarTodasColunas"
+            >
+                Todas
+            </button>
+        </div>
+
+        <label>
+            <input
+                type="checkbox"
+                class="check-coluna-demanda"
+                value="id"
+                checked
+            >
+            LOG
+        </label>
+
+        <label>
+            <input
+                type="checkbox"
+                class="check-coluna-demanda"
+                value="demanda"
+                checked
+            >
+            Demanda
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="problema" checked>
+            Ações em execução
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="beneficioQualitativo" checked>
+            Benefício qualitativo
+        </label>
+        
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="beneficioQuantitativo" checked>
+            Benefício 12 Meses
+        </label>
+
+        <label>
+                            <input  type="checkbox"   class="check-coluna-demanda"   value="beneficio2026"   checked>
+                            Benefício 2026
+                   </label>
+
+        <label>
+    	         <input   type="checkbox"  class="check-coluna-demanda"  value="realizadoFcstDemanda"   checked>
+                            Realizado + FCST
+        </label>
+
+        <label>
+                           <input    type="checkbox"  class="check-coluna-demanda"   value="eficienciaDemanda"   checked>
+                           Eficiência
+        </label>
+
+        <label>
+                          <input    type="checkbox"   class="check-coluna-demanda"   value="periodoCapturaDemanda"   checked>
+                           Período Captura
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="gerente" checked>
+            Gerente
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="coordenador" checked>
+            Coordenador
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="pmo" checked>
+            PMO responsável
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="forum" checked>
+            Fórum
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="status" checked>
+            Status
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="dataFim" checked>
+            Data fim
+        </label>
+
+        <label>
+            <input type="checkbox" class="check-coluna-demanda" value="prioridade" checked>
+            Prioridade
+        </label>
+
+    </div>
+</div>
+
 </div>
 
 
 <!-- TABELA -->
-<div class="tabela-container">
-<h2>Lista de Demandas</h2>
+<div class="tabela-container tabela-demandas-layout">
+    <table id="tabelaProjetos">
+        <thead>
+            <tr id="cabecalhoTabelaProjetos"></tr>
+        </thead>
 
-<table id="tabelaProjetos">
-<thead>
-    <tr>
-        <th onclick="ordenarTabelaProjetos('ID')">ID</th>
-        <th onclick="ordenarTabelaProjetos('Projeto')">Demanda</th>
-        <th onclick="ordenarTabelaProjetos('Problema (Oportunidade)')">Ações em Andamento</th>
-        <th onclick="ordenarTabelaProjetos('Benefício Quantitativo')">Benef. Quant. 2026</th>
-        <th onclick="ordenarTabelaProjetos('Benefício Qualitativo')">Benef. Qual.</th>
-        <th onclick="ordenarTabelaProjetos('Gerente')">Gerente</th>
-        <th onclick="ordenarTabelaProjetos('Coordenador')">Coordenador</th>
-        <th onclick="ordenarTabelaProjetos('PMO Responsável')">PMO Responsável</th>
-        <th onclick="ordenarTabelaProjetos('Forum')">Fórum</th>
-        <th onclick="ordenarTabelaProjetos('Status')">Status</th>
-        <th onclick="ordenarTabelaProjetos('Data Fim')">Data Fim</th>
-        <th onclick="ordenarTabelaProjetos('Prioridade')">Prioridade</th>
-    </tr>
-</thead>
-<tbody></tbody>
-</table>
-
+        <tbody></tbody>
+    </table>
 </div>
+
 
 </div>
 
